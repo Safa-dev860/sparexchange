@@ -10,6 +10,7 @@ import {
   doc,
   query,
   where,
+  getDoc,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { Product } from "../../models/ProductModel";
@@ -110,15 +111,34 @@ const createCategoryThunks = (categoryName) => {
     ),
     updateItem: createAsyncThunk(
       `${categoryName}/updateItem`,
-      async ({ id, data }) => {
+      async ({ id, data }, { rejectWithValue }) => {
         try {
-          const item = new ModelClass({ ...data, id });
           const docRef = doc(db, categoryName, id);
-          await updateDoc(docRef, item.toFirestore());
-          return item;
+
+          // Fetch the document to check if it exists
+          const docSnapshot = await getDoc(docRef);
+          if (!docSnapshot.exists()) {
+            throw new Error(`Document with ID ${id} does not exist`);
+          }
+
+          // Update the document in Firestore
+          await updateDoc(docRef, data);
+
+          // Fetch the updated document data
+          const updatedDocSnapshot = await getDoc(docRef);
+          if (!updatedDocSnapshot.exists()) {
+            throw new Error(`Document with ID ${id} not found after update`);
+          }
+
+          const updatedItem = ModelClass.fromFirestore({
+            id: updatedDocSnapshot.id,
+            ...updatedDocSnapshot.data(),
+          });
+
+          return updatedItem;
         } catch (error) {
           console.error(`Error updating item in ${categoryName}:`, error);
-          throw error;
+          return rejectWithValue(error.message);
         }
       }
     ),

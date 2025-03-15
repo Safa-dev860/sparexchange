@@ -5,27 +5,36 @@ const useCloudinaryUpload = () => {
   const [error, setError] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
 
-  // Your Cloudinary upload preset and cloud name
-  const CLOUDINARY_UPLOAD_PRESET = "sparexchange";
-  const CLOUDINARY_CLOUD_NAME = "dfjvuauae";
-  const CLOUDINARY_API_URL = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
-
   const uploadImage = async (file) => {
     setIsLoading(true);
     setError(null);
 
+    if (
+      !process.env.REACT_APP_CLOUDINARY_API_URL ||
+      !process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    ) {
+      setError("Cloudinary API URL or upload preset is missing.");
+      setIsLoading(false);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+    formData.append(
+      "upload_preset",
+      process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET
+    );
 
     try {
-      const response = await fetch(CLOUDINARY_API_URL, {
+      const response = await fetch(process.env.REACT_APP_CLOUDINARY_API_URL, {
         method: "POST",
         body: formData,
       });
 
       if (!response.ok) {
-        throw new Error("Upload failed");
+        const errorData = await response.json();
+        console.error("Upload failed:", errorData);
+        throw new Error(errorData.error?.message || "Upload failed");
       }
 
       const data = await response.json();

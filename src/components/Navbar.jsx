@@ -12,9 +12,7 @@ const Navbar = () => {
   const { user } = useSelector((state) => state.auth);
 
   const isAuthenticated = !!user;
-  console.log(user);
-  const cartTotalQuantity = useSelector((state) => state.cart.totalQuantity); // Get cart item count
-
+  const cartTotalQuantity = useSelector((state) => state.cart.totalQuantity);
   const handleAccountClick = () => {
     setIsAccountOpen(!isAccountOpen);
   };

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import ProductCard from "../shop/ProductCard";
-import DoneCard from "../donate/DoneCard";
-import ExchangeCard from "../exchange/ExchangeCard";
-import FreelanceCard from "../freelance/FreelanceCard";
-import TransportCard from "../transport/TransportCard";
+import ProductAccountCard from "./ProductAccountCard";
+import FreelanceAccountCard from "./FreelanceAccountCard";
+import DoneAccountCard from "./DoneAccountCard";
+import ExchangeAccountCard from "./ExchangeAccountCard";
+import TransportAccountCard from "./TransportAccountCard";
 
 const ListingsSection = ({
   loading,
@@ -32,15 +32,15 @@ const ListingsSection = ({
   const renderCard = (item) => {
     switch (selectedCategory) {
       case "shop":
-        return <ProductCard key={item.id} item={item} />;
+        return <ProductAccountCard key={item.id} item={item} />;
       case "done":
-        return <DoneCard key={item.id} item={item} />;
+        return <DoneAccountCard key={item.id} item={item} />;
       case "exchange":
-        return <ExchangeCard key={item.id} item={item} />;
+        return <ExchangeAccountCard key={item.id} item={item} />;
       case "freelance":
-        return <FreelanceCard key={item.id} item={item} />;
+        return <FreelanceAccountCard key={item.id} item={item} />;
       case "transport":
-        return <TransportCard key={item.id} item={item} />;
+        return <TransportAccountCard key={item.id} item={item} />;
       default:
         return null; // Fallback, though this shouldn't happen with fixed categories
     }

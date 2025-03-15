@@ -6,29 +6,7 @@ export class Freelance {
     gigTitle = "",
     description = "",
     category = "",
-    packages = [
-      {
-        title: "basic",
-        description: "",
-        price: 0,
-        revisions: 0,
-        deliveryTime: 0,
-      },
-      {
-        title: "standard",
-        description: "",
-        price: 0,
-        revisions: 0,
-        deliveryTime: 0,
-      },
-      {
-        title: "premium",
-        description: "",
-        price: 0,
-        revisions: 0,
-        deliveryTime: 0,
-      },
-    ],
+    packages = [],
     technologies = [],
     images = [],
     freelancer = { id: null, name: "", email: "", imageUrl: "" },
@@ -53,20 +31,43 @@ export class Freelance {
   }
 
   toFirestore(data = {}) {
+    const validCreatedAt =
+      this.createdAt instanceof Date && !isNaN(this.createdAt)
+        ? this.createdAt
+        : new Date();
+    const validUpdatedAt =
+      this.updatedAt instanceof Date && !isNaN(this.updatedAt)
+        ? this.updatedAt
+        : new Date();
+
     return {
       id: this.id,
       ...data,
-
-      createdAt: this.createdAt.toISOString(),
-      updatedAt: this.updatedAt.toISOString(),
+      createdAt: validCreatedAt.toISOString(),
+      updatedAt: validUpdatedAt.toISOString(),
     };
   }
 
   static fromFirestore(data) {
+    const createdAt =
+      data.createdAt && typeof data.createdAt.toDate === "function"
+        ? data.createdAt.toDate()
+        : new Date(data.createdAt || Date.now());
+    const updatedAt =
+      data.updatedAt && typeof data.updatedAt.toDate === "function"
+        ? data.updatedAt.toDate()
+        : new Date(data.updatedAt || Date.now());
+
     return new Freelance({
       ...data,
-      createdAt: new Date(data.createdAt),
-      updatedAt: new Date(data.updatedAt),
+      createdAt,
+      updatedAt,
     });
+  }
+
+  getFormattedDate(date) {
+    return date instanceof Date && !isNaN(date)
+      ? date.toLocaleDateString()
+      : "";
   }
 }

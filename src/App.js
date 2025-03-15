@@ -25,9 +25,12 @@ import ShoppingCart from "./pages/ShoppingCart";
 import DashboardPage from "./components/account/DashboardPage";
 import { useState } from "react";
 import AdminPage from "./pages/Admin";
+import ProductAccountEdit from "./components/account/ProductAccountEditCard";
+import FreelanceAccountEdit from "./components/account/FreelanceAccountEditCard";
+import DoneAccountEdit from "./components/account/DoneAccountEditCard";
 
 const App = () => {
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin] = useState(false);
   return (
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
@@ -49,8 +52,17 @@ const App = () => {
                   element={<ForgetPasswordPage />}
                 />
                 <Route element={<ProtectedRoute />}>
-                  {/* protected routes */}
+                  {/* protected routes  ProductAccountEdit */}
                   <Route path="/products/:id" element={<ProductDetails />} />
+                  <Route
+                    path="/products/:id/edit"
+                    element={<ProductAccountEdit />}
+                  />
+                  <Route
+                    path="/gigs/:id/edit"
+                    element={<FreelanceAccountEdit />}
+                  />
+                  <Route path="/done/:id/edit" element={<DoneAccountEdit />} />
                   <Route path="/exchanges/:id" element={<ExchangeDetails />} />
                   <Route path="/gigs/:id" element={<GigDetails />} />
                   <Route path="/shop/:id" element={<ProductDetails />} />

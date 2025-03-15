@@ -82,7 +82,7 @@ const FormWrapper = ({
   onSubmit,
   uploadImage,
   isLoading,
-  handleAddPackage,
+  handleAddPackage, // Receive handleAddPackage as a prop
 }) => {
   const [formData, setFormData] = useState(() => {
     const model = categoryModels[category]();
@@ -146,7 +146,7 @@ const FormWrapper = ({
       formData={formData}
       handleFormChange={handleFormChange}
       handleSubmit={handleLocalSubmit}
-      handleAddPackage={handleAddPackage}
+      handleAddPackage={handleAddPackage} // Pass handleAddPackage to FreelanceForm
       isLoading={isLoading}
       uploadError={localUploadError}
     />
@@ -156,8 +156,11 @@ const FormWrapper = ({
 // AccountPage Component
 const AccountPage = () => {
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [formData, setFormData] = useState(null);
-  const [, setUploadError] = useState(null);
+  const [formData, setFormData] = useState(() => {
+    const model = categoryModels[selectedCategory]();
+    return convertDatesToStrings(model);
+  });
+  const [uploadError, setUploadError] = useState(null);
   const { uploadImage, isLoading } = useCloudinaryUpload();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.auth.user);
@@ -178,21 +181,12 @@ const AccountPage = () => {
 
   // Handle category selection
   const handleCategoryChange = (e) => {
-    const newCategory = e.target.value;
-    setSelectedCategory(newCategory);
-
-    // Reset form data when category changes
-    if (newCategory && categoryModels[newCategory]) {
-      setFormData(convertDatesToStrings(categoryModels[newCategory]()));
-    } else {
-      setFormData(null);
-    }
+    setSelectedCategory(e.target.value);
+    setUploadError(null);
   };
 
   // Handle form submission
   const handleSubmit = (category, formData) => {
-    console.log(formData);
-
     if (!user) {
       setUploadError("You must be signed in to add items.");
       return;
@@ -222,11 +216,15 @@ const AccountPage = () => {
 
     const dataWithOwner = {
       ...formData,
-      [category === "Freelance" ? "freelancer" : "owner"]: {
+      [category === "Freelance"
+        ? "freelancer"
+        : category === "Done"
+        ? "doner"
+        : "owner"]: {
         id: user.uid,
-        name: user.name || "Anonymous",
+        name: user.displayName || "Anonymous",
         email: user.email,
-        imageUrl: user.profilePicture || "",
+        imageUrl: user.photoURL || "",
       },
     };
 
@@ -251,15 +249,20 @@ const AccountPage = () => {
   };
 
   // Handle adding a new package
-  const handleAddPackage = (packageData) => {
-    setFormData((prevFormData) => {
-      console.log(packageData);
-      return {
-        ...prevFormData,
-        packages: [packageData],
-      };
-    });
-    console.log(formData);
+  const handleAddPackage = () => {
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      packages: [
+        ...prevFormData.packages,
+        {
+          title: "",
+          description: "",
+          price: 0,
+          revisions: 0,
+          deliveryTime: 0,
+        },
+      ],
+    }));
   };
 
   return (
@@ -314,15 +317,24 @@ const AccountPage = () => {
           </div>
 
           {/* Render all FormWrappers, only showing the selected one */}
-          {selectedCategory && formData && (
+          {selectedCategory && (
             <div className="w-full">
-              <FormWrapper
-                category={selectedCategory}
-                onSubmit={handleSubmit}
-                uploadImage={uploadImage}
-                isLoading={isLoading}
-                handleAddPackage={handleAddPackage}
-              />
+              {Object.keys(categoryModels).map((category) => (
+                <div
+                  key={category}
+                  className={`transition-all duration-300 ease-in-out ${
+                    selectedCategory === category ? "block" : "hidden"
+                  }`}
+                >
+                  <FormWrapper
+                    category={category}
+                    onSubmit={handleSubmit}
+                    uploadImage={uploadImage}
+                    isLoading={isLoading}
+                    handleAddPackage={handleAddPackage} // Pass handleAddPackage to FormWrapper
+                  />
+                </div>
+              ))}
             </div>
           )}
         </div>

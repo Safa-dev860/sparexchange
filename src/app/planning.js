@@ -77,3 +77,10 @@
 // status (inprogress, completed)
 // completedAt (date)
 // completedBy { id, name, email ,imageUrl }
+
+// todo
+
+// location (lat,) for the products
+// category for the products
+
+// change the notification popup
