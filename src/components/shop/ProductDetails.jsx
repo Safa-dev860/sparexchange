@@ -1,6 +1,5 @@
-// components/ProductDetails.js
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { productsThunks } from "../../redux/slices/categorySlice"; // Adjust path to your product thunks
 import { addToCart } from "../../redux/slices/cardSlice"; // Import addToCart action
@@ -10,12 +9,13 @@ import { Product } from "../../models/ProductModel";
 const ProductDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
+  const navigate = useNavigate(); // Use useNavigate hook
 
   // Select productItems directly with useSelector
   const productItems = useSelector((state) => state.products.items) || [];
   const loading = useSelector((state) => state.products.loading) || false;
   const error = useSelector((state) => state.products.error) || null;
-
+  const { user } = useSelector((state) => state.auth);
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
@@ -47,12 +47,19 @@ const ProductDetails = () => {
       // Prepare the payload for addToCart action
       const cartItem = {
         id: product.id,
+        ownerId: product.ownerId,
         name: product.name,
         price: parseInt(product.price),
         image: product.images[0] || "", // Use the first image or empty string if none
       };
       dispatch(addToCart(cartItem)); // Dispatch the action
-      alert(`${product.name} added to cart!`);
+      // alert(`${product.name} added to cart!`);
+    }
+  };
+
+  const handleEditProduct = () => {
+    if (product) {
+      navigate(`/products/${product.id}/edit`); // Navigate to the edit page
     }
   };
 
@@ -91,6 +98,8 @@ const ProductDetails = () => {
           product={product}
           onToggleFavorite={handleToggleFavorite}
           onAddToCart={handleAddToCart}
+          onEditProduct={handleEditProduct}
+          currentUserId={user.uid} // Replace with your user ID
         />
       </div>
     </div>

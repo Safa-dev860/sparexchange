@@ -13,7 +13,7 @@ const ProductCard = ({ item }) => {
         />
         <h2 className="text-lg font-semibold mt-2">{item.name}</h2>
         <p className="text-gray-600">by {item.owner.name}</p>
-        <p className="text-blue-600 font-bold">${item.price}</p>
+        <p className="text-blue-600 font-bold">{item.price} DT</p>
         <p className="text-gray-400 text-sm">{item.category}</p>
         <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md w-full hover:bg-blue-700">
           View Product

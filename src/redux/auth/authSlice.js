@@ -47,9 +47,11 @@ const getOrCreateUserData = async (user) => {
       uid: user.uid,
       role: "client",
       email: user.email,
-      name: user.displayName || "Unknown",
+      name: user.displayName,
       birthday: null,
-      profilePicture: user.photoURL || null,
+      profilePicture: user.photoURL,
+      balance: 0,
+      transactions: [],
     };
     await setDoc(userDocRef, userData);
     return userData;
@@ -74,6 +76,7 @@ export const signInWithGoogle = createAsyncThunk(
         refreshToken: user.refreshToken,
         ...userData,
       };
+      console.log("User : ", data);
       return data;
     } catch (error) {
       return rejectWithValue(error.message);

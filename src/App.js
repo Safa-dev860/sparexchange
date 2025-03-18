@@ -28,6 +28,8 @@ import AdminPage from "./pages/Admin";
 import ProductAccountEdit from "./components/account/ProductAccountEditCard";
 import FreelanceAccountEdit from "./components/account/FreelanceAccountEditCard";
 import DoneAccountEdit from "./components/account/DoneAccountEditCard";
+import ExchangeAccountEdit from "./components/account/ExchangeAccountEditCard";
+import TransportAccountEditCard from "./components/account/TransportAccountEditCard";
 
 const App = () => {
   const [isAdmin] = useState(false);
@@ -63,6 +65,14 @@ const App = () => {
                     element={<FreelanceAccountEdit />}
                   />
                   <Route path="/done/:id/edit" element={<DoneAccountEdit />} />
+                  <Route
+                    path="/exchanges/:id/edit"
+                    element={<ExchangeAccountEdit />}
+                  />
+                  <Route
+                    path="/transport/:id/edit"
+                    element={<TransportAccountEditCard />}
+                  />
                   <Route path="/exchanges/:id" element={<ExchangeDetails />} />
                   <Route path="/gigs/:id" element={<GigDetails />} />
                   <Route path="/shop/:id" element={<ProductDetails />} />

@@ -1,7 +1,14 @@
-// components/ProductInfoWidget.jsx
 import React from "react";
 
-const ProductInfoWidget = ({ product, onToggleFavorite, onAddToCart }) => {
+const ProductInfoWidget = ({
+  product,
+  onToggleFavorite,
+  onAddToCart,
+  onEditProduct,
+  currentUserId,
+}) => {
+  const isOwner = product.ownerId === currentUserId;
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 flex flex-col md:flex-row">
       {/* Left Column: Images (stacked on mobile, side on md+) */}
@@ -28,7 +35,7 @@ const ProductInfoWidget = ({ product, onToggleFavorite, onAddToCart }) => {
           {product.name}
         </h1>
         <p className="text-lg sm:text-xl text-green-600 mb-4">
-          ${product.price}
+          {product.price} DT
         </p>
         <p className="text-gray-600 mb-4">{product.description}</p>
         <p className="text-sm text-gray-500 mb-2">
@@ -39,19 +46,30 @@ const ProductInfoWidget = ({ product, onToggleFavorite, onAddToCart }) => {
           {product.owner.email})
         </p>
         <div className="flex space-x-4">
-          <button
-            onClick={onToggleFavorite}
-            className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition text-2xl"
-            aria-label="Toggle Favorite"
-          >
-            ❤️ {/* Unicode heart */}
-          </button>
-          <button
-            onClick={onAddToCart}
-            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
-          >
-            Add to Cart
-          </button>
+          {isOwner ? (
+            <button
+              onClick={onEditProduct}
+              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+            >
+              Visit Your Product
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={onToggleFavorite}
+                className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition text-2xl"
+                aria-label="Toggle Favorite"
+              >
+                ❤️ {/* Unicode heart */}
+              </button>
+              <button
+                onClick={onAddToCart}
+                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              >
+                Add to Cart
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

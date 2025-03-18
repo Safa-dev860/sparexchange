@@ -2,7 +2,7 @@
 export class Exchange {
   constructor({
     id = null,
-    onwerId = null,
+    ownerId = null, // Corrected the typo here
     itemOffered = "",
     itemWanted = "",
     condition = "new",
@@ -17,9 +17,8 @@ export class Exchange {
     closedBy = null,
     requests = [],
   } = {}) {
-    // Similar structure with all properties
     this.id = id;
-    this.ownerId = onwerId;
+    this.ownerId = ownerId; // Corrected the typo here
     this.itemOffered = itemOffered;
     this.itemWanted = itemWanted;
     this.condition = condition;
@@ -36,21 +35,47 @@ export class Exchange {
   }
 
   toFirestore(data = {}) {
+    const validCreatedAt =
+      this.createdAt instanceof Date && !isNaN(this.createdAt)
+        ? this.createdAt
+        : new Date();
+    const validUpdatedAt =
+      this.updatedAt instanceof Date && !isNaN(this.updatedAt)
+        ? this.updatedAt
+        : new Date();
+    const validClosedAt =
+      this.closedAt instanceof Date && !isNaN(this.closedAt)
+        ? this.closedAt
+        : null; // Ensure closedAt is null if not a valid date
     return {
       id: this.id,
+      ownerId: this.ownerId,
       ...data,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-      closedAt: Date.now(),
+      createdAt: validCreatedAt,
+      updatedAt: validUpdatedAt,
+      closedAt: validClosedAt,
     };
   }
 
   static fromFirestore(data) {
+    const createdAt =
+      data.createdAt && typeof data.createdAt.toDate === "function"
+        ? data.createdAt.toDate()
+        : new Date(data.createdAt || Date.now());
+    const updatedAt =
+      data.updatedAt && typeof data.updatedAt.toDate === "function"
+        ? data.updatedAt.toDate()
+        : new Date(data.updatedAt || Date.now());
+    const closedAt =
+      data.closedAt && typeof data.closedAt.toDate === "function"
+        ? data.closedAt.toDate()
+        : data.closedAt || null;
     return new Exchange({
       ...data,
-      createdAt: new Date(data.createdAt),
-      updatedAt: new Date(data.updatedAt),
-      closedAt: data.closedAt ? new Date(data.closedAt) : null,
+      ownerId: data.ownerId,
+      createdAt,
+      updatedAt,
+      closedAt,
     });
   }
 }

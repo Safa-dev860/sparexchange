@@ -32,7 +32,7 @@ const TransportInfoWidget = ({
           {transport.vehicleType}
         </h1>
         <p className="text-lg sm:text-xl text-green-600 mb-4">
-          ${transport.price}
+          {transport.price} DT
         </p>
         <p className="text-gray-600 mb-4">Route: {transport.route}</p>
         <p className="text-sm text-gray-500 mb-2">

@@ -45,7 +45,7 @@ const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
           <span className="font-semibold">Status:</span> {exchange.status}
         </p>
         <p className="text-sm text-gray-500 mb-4">
-          <span className="font-semibold">Created:</span>{" "}
+          <span className="font-semibold">Created:</span>
           {exchange.createdAt.toLocaleDateString()}
         </p>
         <div className="flex space-x-4">

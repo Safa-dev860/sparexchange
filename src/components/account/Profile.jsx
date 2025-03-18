@@ -2,17 +2,32 @@
 import React from "react";
 
 const ProfileSection = ({ user }) => {
+  // Log user data for debugging
+  console.log(user);
+
   return (
-    <div className="w-full bg-white shadow-lg p-4 rounded-xl mt-0 ">
+    <div className="w-full bg-white shadow-lg p-6 rounded-xl mt-0 transition-all hover:shadow-xl">
+      {/* Profile Picture */}
       <img
-        src={user.profilePicture || "https://picsum.photos/150"}
+        src={user.profilePicture}
         alt="Profile"
-        className="w-28 h-28 rounded-full mb-4 mx-auto border-2 border-gray-200"
+        className="w-32 h-32 rounded-full mb-6 mx-auto border-4 border-purple-200 hover:border-purple-400 transition-all"
       />
-      <h2 className="text-2xl font-bold text-gray-800 text-center tracking-tight">
+
+      {/* User Name */}
+      <h2 className="text-3xl font-bold text-gray-800 text-center tracking-tight mb-2">
         {user.name}
       </h2>
-      <p className="text-gray-600 text-center text-sm mt-1">{user.email}</p>
+
+      {/* User Balance */}
+      <div className="bg-purple-50 p-3 rounded-lg text-center mb-4">
+        <span className="text-lg font-semibold text-purple-800">
+          Balance: {user.balance} DT
+        </span>
+      </div>
+
+      {/* User Email */}
+      <p className="text-gray-600 text-center text-sm mt-2">{user.email}</p>
     </div>
   );
 };

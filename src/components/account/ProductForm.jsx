@@ -1,7 +1,6 @@
-// components/account/ProductForm.js
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker } from "react-leaflet";
 import L from "leaflet"; // Import Leaflet for custom icon
 import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
 
@@ -20,8 +19,17 @@ const customMarkerIcon = L.divIcon({
   className: "", // Remove default Leaflet class to avoid styling conflicts
 });
 
+const initialFormData = {
+  name: "",
+  price: "",
+  description: "",
+  category: "",
+  location: { lat: 33.8869, lng: 9.5375 }, // Default to Tunisia's coordinates
+  images: [],
+};
+
 const ProductForm = ({
-  formData,
+  formData = initialFormData,
   handleFormChange,
   handleSubmit,
   isLoading,
@@ -137,7 +145,7 @@ const ProductForm = ({
             }`}
             disabled={isLoading}
           >
-            {formData.location.lat && formData.location.lng
+            {formData.location?.lat && formData.location?.lng
               ? `Lat: ${formData.location.lat.toFixed(
                   4
                 )}, Lng: ${formData.location.lng.toFixed(4)}`
@@ -192,7 +200,7 @@ const ProductForm = ({
 
 // Tunisia Map component with SVG marker and buttons in a row
 const TunisiaMap = ({ initialLocation, onSelect, onClose }) => {
-  const [selectedLocation, setSelectedLocation] = useState(
+  const [selectedLocation] = useState(
     initialLocation.lat && initialLocation.lng
       ? [initialLocation.lat, initialLocation.lng]
       : null
@@ -200,12 +208,12 @@ const TunisiaMap = ({ initialLocation, onSelect, onClose }) => {
 
   // Component to handle map click events
   const MapClickHandler = () => {
-    const map = useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        setSelectedLocation([lat, lng]);
-      },
-    });
+    // const map = useMapEvents({
+    //   click(e) {
+    //     const { lat, lng } = e.latlng;
+    //     setSelectedLocation([lat, lng]);
+    //   },
+    // });
     return null;
   };
 

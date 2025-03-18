@@ -284,7 +284,7 @@ const Navbar = () => {
 
                 {/* Shopping Bag Button with Badge */}
                 <Link
-                  to="/cart"
+                  to="/shopping-card"
                   className="relative bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200"
                   onClick={() => setIsOpen(false)}
                 >

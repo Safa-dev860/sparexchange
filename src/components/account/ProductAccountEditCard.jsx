@@ -149,7 +149,7 @@ const ProductAccountEdit = () => {
     images: [],
   });
   const [uploadError, setUploadError] = useState(null);
-  const [priceError, setPriceError] = useState(null); // New state for price validation error
+  const [priceError, setPriceError] = useState(null);
 
   const {
     uploadImage,
@@ -173,7 +173,7 @@ const ProductAccountEdit = () => {
           : [],
       };
       setFormData(initialFormData);
-      console.log("Initial formData set:", initialFormData);
+      // console.log("Initial formData set:", initialFormData);
     } else if (!loading && !error) {
       dispatch(productsThunks.fetchItems())
         .unwrap()
@@ -193,7 +193,7 @@ const ProductAccountEdit = () => {
                 : [],
             };
             setFormData(initialFormData);
-            console.log("Initial formData set after fetch:", initialFormData);
+            // console.log("Initial formData set after fetch:", initialFormData);
           }
         })
         .catch((err) => console.error("Failed to fetch products:", err));
@@ -213,7 +213,7 @@ const ProductAccountEdit = () => {
     } else {
       setFormData((prev) => {
         const newFormData = { ...prev, [name]: value };
-        console.log(`Form field ${name} updated to:`, value);
+        // console.log(`Form field ${name} updated to:`, value);
         return newFormData;
       });
     }
@@ -222,7 +222,7 @@ const ProductAccountEdit = () => {
   const handleLocationSelect = (lat, lng) => {
     setFormData((prev) => {
       const newFormData = { ...prev, location: { lat, lng } };
-      console.log("Location updated to:", { lat, lng });
+      // console.log("Location updated to:", { lat, lng });
       setShowMapModal(false);
       return newFormData;
     });
@@ -235,7 +235,7 @@ const ProductAccountEdit = () => {
         const uploadedImageUrls = await Promise.all(
           files.map(async (file) => {
             const url = await uploadImage(file);
-            console.log("Uploaded image URL:", url);
+            // console.log("Uploaded image URL:", url);
             return url;
           })
         );
@@ -244,7 +244,7 @@ const ProductAccountEdit = () => {
             ...prev.images,
             ...uploadedImageUrls.filter(Boolean),
           ];
-          console.log("Updated formData.images:", newImages);
+          // console.log("Updated formData.images:", newImages);
           return { ...prev, images: newImages };
         });
         setUploadError(null);
@@ -260,7 +260,7 @@ const ProductAccountEdit = () => {
       const newImages = prev.images.filter(
         (_, index) => index !== indexToRemove
       );
-      console.log("Images after removal:", newImages);
+      // console.log("Images after removal:", newImages);
       return { ...prev, images: newImages };
     });
   };
@@ -269,7 +269,7 @@ const ProductAccountEdit = () => {
     e.preventDefault();
 
     if (uploadLoading) {
-      console.log("Submission blocked: Image upload in progress");
+      console.log("Image upload in progress ...");
       return;
     }
 
@@ -293,13 +293,13 @@ const ProductAccountEdit = () => {
       updatedAt: new Date(),
     };
 
-    console.log("Data being sent to updateItem:", updatedData);
+    // console.log("Data being sent to updateItem:", updatedData);
 
     try {
-      const result = await dispatch(
+      await dispatch(
         productsThunks.updateItem({ id: product.id, data: updatedData })
       ).unwrap();
-      console.log("Update result:", result);
+      // console.log("Update result:", result);
       setIsEditing(false);
       setProduct(Product.fromFirestore(updatedData));
       alert("Product updated successfully!");
