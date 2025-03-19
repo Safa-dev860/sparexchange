@@ -31,11 +31,11 @@ const DoneAccountCard = ({ item }) => {
         />
         <h2 className="text-lg font-semibold mt-2">{item.doneTitle}</h2>
         <p className="text-gray-600">by {item.owner.name}</p>
-        <p className="text-blue-600 font-bold">{item.status}</p>
+        <p className="text-green-600 font-bold">{item.status}</p>
         {/* Hover overlay with icon buttons */}
         <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center gap-4">
           <button
-            className="bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700 transition"
+            className="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition"
             onClick={(e) => {
               e.preventDefault();
               navigate(`/done/${item.id}/edit`); // Adjust the route as needed

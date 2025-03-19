@@ -173,7 +173,6 @@ const FreelanceForm = ({
               </label>
               <input
                 type="number"
-                name={`packages[${index}].revisions`}
                 value={packageItem.revisions}
                 onChange={handleFormChange}
                 className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
