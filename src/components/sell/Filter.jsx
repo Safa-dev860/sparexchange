@@ -22,7 +22,7 @@ const Filters = ({
       <div className="flex flex-col sm:flex-row items-center gap-4">
         {/* Filter Logo/Icon */}
         <div className="flex-shrink-0">
-          <FaFilter className="text-indigo-600 text-xl" />
+          <FaFilter className="text-green-600 text-xl" />
         </div>
 
         {/* Search Filter */}
@@ -30,7 +30,7 @@ const Filters = ({
           <input
             type="text"
             placeholder="Search items by name..."
-            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-400"
+            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-green-400"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -39,7 +39,7 @@ const Filters = ({
         {/* Category Filter */}
         <div className="w-full sm:w-auto flex-1">
           <select
-            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-400"
+            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-green-400"
             value={category}
             onChange={(e) => setCategory(e.target.value)}
           >
@@ -55,7 +55,7 @@ const Filters = ({
         {/* Sort By Filter */}
         <div className="w-full sm:w-auto flex-1">
           <select
-            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-400"
+            className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-green-400"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
           >
@@ -69,7 +69,7 @@ const Filters = ({
         <div className="w-full sm:w-auto">
           <button
             onClick={handleApplyFilters}
-            className="w-full sm:w-auto p-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-200"
+            className="w-full sm:w-auto p-3 bg-green-700 text-white rounded-lg font-semibold hover:bg-green-700 transition-all duration-200"
           >
             Apply Filters
           </button>

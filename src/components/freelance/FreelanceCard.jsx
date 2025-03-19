@@ -20,7 +20,7 @@ const FreelanceCard = ({ item }) => {
         <p className="text-gray-400 text-sm">
           Delivery: {basicPackage.deliveryTime} days
         </p> */}
-        <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md w-full hover:bg-blue-700">
+        <button className="mt-2 bg-green-700 text-white hover:bg-green-800 hover:shadow-md px-4 py-2 rounded-md w-full">
           Hire Now
         </button>
       </div>

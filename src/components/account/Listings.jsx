@@ -59,7 +59,7 @@ const ListingsSection = ({
               key={category}
               className={`flex-1 min-w-[80px] px-4 py-2 rounded-lg capitalize text-sm font-medium transition-all duration-200 ${
                 selectedCategory === category
-                  ? "bg-indigo-600 text-white shadow-inner"
+                  ? "bg-green-600 text-white shadow-inner"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:text-gray-800"
               }`}
               onClick={() => setSelectedCategory(category)}

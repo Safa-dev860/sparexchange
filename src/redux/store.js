@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage"; // Defaults to localStorage for
 import authReducer from "./auth/authSlice"; // Adjust path as needed
 import categoryReducers from "./slices/categorySlice"; // Your category reducers
 import cartReducer from "./slices/cardSlice";
+import conversationReducer from "./slices/conversationSlice";
 // Persist config for auth slice
 const persistConfig = {
   key: "auth",
@@ -20,6 +21,7 @@ export const store = configureStore({
     ...categoryReducers, // Spreads: products, exchange, done, freelance, transport
     auth: persistedAuthReducer, // Persisted auth reducer
     cart: cartReducer,
+    conversation: conversationReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

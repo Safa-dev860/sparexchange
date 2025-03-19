@@ -13,12 +13,12 @@ const DoneCard = ({ item }) => {
         />
         <h2 className="text-lg font-semibold mt-2">{item.doneTitle}</h2>
         <p className="text-gray-600">by {item.owner.name}</p>
-        <p className="text-blue-600 font-bold">{item.status}</p>
+        <p className="text-green-700 font-bold">{item.status}</p>
         {/* <p className="text-gray-400 text-sm">
           Completion:
           {item.completionDate ? item.completionDate : "Pending"}
         </p> */}
-        <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md w-full hover:bg-blue-700">
+        <button className="mt-2 bg-green-700 text-white hover:bg-green-800 hover:shadow-md px-4 py-2 rounded-md w-full">
           View Details
         </button>
       </div>

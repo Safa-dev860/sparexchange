@@ -291,10 +291,10 @@ const AccountPage = () => {
             <select
               value={selectedCategory}
               onChange={handleCategoryChange}
-              className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+              className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
                 isLoading
                   ? "opacity-50 cursor-not-allowed"
-                  : "hover:border-indigo-400"
+                  : "hover:border-green-400"
               }`}
               disabled={isLoading}
             >

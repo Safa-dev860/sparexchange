@@ -56,11 +56,11 @@ const Exchange = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-blue-700 text-center">
-        Sell Recyclable Items
+      <h1 className="text-3xl font-bold text-green-700 text-center">
+        Exchange Recyclable Items
       </h1>
       <p className="text-gray-600 mt-2 text-center">
-        Sell plastic bottles, paper, and other recyclables easily.
+        Find items to exchange with others
       </p>
 
       {/* Filters Component */}

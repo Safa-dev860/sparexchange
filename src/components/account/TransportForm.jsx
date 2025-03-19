@@ -24,7 +24,7 @@ const TransportForm = ({
             name="vehicleType"
             value={formData.vehicleType}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:border-indigo-400"
@@ -42,10 +42,10 @@ const TransportForm = ({
             name="capacity"
             value={formData.capacity}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
             required
@@ -58,7 +58,7 @@ const TransportForm = ({
             name="route"
             value={formData.route}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-indigo-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:border-indigo-400"
@@ -76,7 +76,7 @@ const TransportForm = ({
             value={formData.price}
             onChange={handleFormChange}
             step="0.01"
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-indigo-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:border-indigo-400"
@@ -92,7 +92,7 @@ const TransportForm = ({
             name="images"
             onChange={handleFormChange}
             multiple
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-100 file:text-indigo-700 file:font-semibold hover:file:bg-indigo-200 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-indigo-100 file:text-green-700 file:font-semibold hover:file:bg-indigo-200 transition-all duration-200 ${
               isLoading ? "opacity-50 cursor-not-allowed" : ""
             }`}
             disabled={isLoading}
@@ -106,7 +106,7 @@ const TransportForm = ({
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full p-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 ${
+          className={`w-full p-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

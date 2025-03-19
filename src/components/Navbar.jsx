@@ -1,21 +1,43 @@
-import { useState } from "react";
+// export default Navbar;
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../redux/auth/authSlice"; // Adjust path as needed
+import { logout } from "../redux/auth/authSlice"; // Ajustez le chemin si nécessaire
+import { FaRecycle } from "react-icons/fa"; // Import des icônes
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false); // État pour gérer le défilement
   const dispatch = useDispatch();
   const location = useLocation();
 
   const { user } = useSelector((state) => state.auth);
-
   const isAuthenticated = !!user;
   const cartTotalQuantity = useSelector((state) => state.cart.totalQuantity);
+
+  // Gestion du défilement
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(true);
+    };
+
+    // Ajoutez l'écouteur de défilement uniquement sur la page d'accueil
+    if (location.pathname === "/") {
+      window.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (location.pathname === "/") {
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [location.pathname]);
+
   const handleAccountClick = () => {
     setIsAccountOpen(!isAccountOpen);
   };
+
   const handleLogout = () => dispatch(logout());
 
   const navItems = [
@@ -27,21 +49,36 @@ const Navbar = () => {
     { to: "/transport", label: "Transport" },
   ];
 
-  return (
-    <nav className="bg-blue-600 text-white p-2 shadow-md fixed top-0 w-full z-50">
-      <div className="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 className="text-2xl font-bold">SpareXchange</h1>
+  // Détermine la couleur de la navbar
+  const navbarColor =
+    location.pathname !== "/" || isScrolled ? "bg-[#003837]" : "bg-transparent";
 
-        {/* Desktop Menu */}
+  return (
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${navbarColor} shadow-md`}
+      style={{ padding: "1.5rem 0" }} // Augmenter la taille de la Navbar
+    >
+      <div className="max-w-7xl mx-auto flex justify-between items-center px-4">
+        {/* Logo avec icône */}
+        <div className="flex items-center space-x-2">
+          <FaRecycle className="text-3xl text-green-400" />
+          <h1 className="text-2xl font-bold text-white">SpareXchange</h1>
+        </div>
+
+        {/* Menu Desktop */}
         <ul className="hidden md:flex space-x-6">
           {navItems.map((item) => (
             <li key={item.to}>
               <Link
                 to={item.to}
-                className={`px-3 py-1 rounded-full transition-colors duration-200 ${
+                className={`px-3 py-1 rounded-full transition-all duration-300 ${
                   location.pathname === item.to
-                    ? "bg-white text-blue-600"
-                    : "hover:text-gray-300"
+                    ? "bg-green-700 text-white shadow-lg"
+                    : `${
+                        navbarColor === "bg-[#003837]"
+                          ? "text-white hover:bg-green-800 hover:text-white hover:shadow-md"
+                          : "text-white hover:bg-green-800 hover:text-white hover:shadow-md"
+                      }`
                 }`}
               >
                 {item.label}
@@ -50,14 +87,18 @@ const Navbar = () => {
           ))}
         </ul>
 
-        {/* Desktop Account or Auth Buttons */}
+        {/* Boutons de compte ou authentification (Desktop) */}
         <div className="hidden md:flex items-center space-x-4">
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
-              {/* Notifications Button */}
+              {/* Bouton de notifications */}
               <Link
                 to="/notifications"
-                className="bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200"
+                className={`p-2 rounded-full transition-all duration-300 ${
+                  navbarColor === "bg-[#003837]"
+                    ? "bg-green-700 text-white hover:bg-green-800 hover:shadow-md"
+                    : "bg-green-700 text-white hover:bg-green-800 hover:shadow-md"
+                }`}
               >
                 <svg
                   className="w-6 h-6"
@@ -74,10 +115,14 @@ const Navbar = () => {
                 </svg>
               </Link>
 
-              {/* Shopping Bag Button with Badge */}
+              {/* Bouton de panier avec badge */}
               <Link
                 to="/shopping-card"
-                className="relative bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200"
+                className={`relative p-2 rounded-full transition-all duration-300 ${
+                  navbarColor === "bg-[#003837]"
+                    ? "bg-green-700 text-white hover:bg-green-800 hover:shadow-md"
+                    : "bg-green-700 text-white hover:bg-green-800 hover:shadow-md"
+                }`}
               >
                 <svg
                   className="w-6 h-6"
@@ -99,39 +144,28 @@ const Navbar = () => {
                 )}
               </Link>
 
-              {/* Account Button with Dropdown */}
+              {/* Bouton de compte avec menu déroulant */}
               <div className="relative">
                 <button
                   onClick={handleAccountClick}
-                  className="bg-white text-blue-600 p-1 rounded-full hover:bg-gray-200 relative"
+                  className={`p-1 rounded-full transition-all duration-300 ${
+                    navbarColor === "bg-[#003837]"
+                      ? "bg-green-700 hover:bg-green-800 hover:shadow-md"
+                      : "bg-green-700 hover:bg-green-800 hover:shadow-md"
+                  }`}
                 >
                   <img
                     src={user.profilePicture}
                     alt="Avatar"
                     className="w-8 h-8 rounded-full"
                   />
-                  <span className="absolute bottom-0 left-0 w-3 h-3 bg-gray-800 rounded-full flex items-center justify-center">
-                    <svg
-                      className="w-2 h-2 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </span>
                 </button>
 
                 {isAccountOpen && (
-                  <div className="absolute top-10 mt-2 right-0 w-48 bg-white text-gray-800 rounded-lg shadow-lg py-2 z-50">
+                  <div className="absolute top-10 mt-2 right-0 w-48 bg-green-900 text-white rounded-lg shadow-lg py-2 z-50">
                     <Link
                       to="/account"
-                      className="flex items-center px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                       onClick={() => setIsAccountOpen(false)}
                     >
                       <img
@@ -141,72 +175,26 @@ const Navbar = () => {
                       />
                       <span>{user.name}</span>
                     </Link>
-                    <hr className="my-1 border-gray-200" />
+                    <hr className="my-1 border-green-800" />
                     <Link
                       to="/dashboard"
-                      className="flex items-center px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                       onClick={() => setIsAccountOpen(false)}
                     >
-                      <svg
-                        className="w-5 h-5 mr-2 text-gray-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M3 10l1.464-1.464a2 2 0 012.828 0L12 12m9 0l-1.464-1.464a2 2 0 00-2.828 0L12 12M12 12l-6.536 6.536a2 2 0 01-2.828 0L3 17m9 0l6.536 6.536a2 2 0 002.828 0L21 17"
-                        />
-                      </svg>
                       <span>Dashboard</span>
                     </Link>
                     <Link
                       to="/settings"
-                      className="flex items-center px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                       onClick={() => setIsAccountOpen(false)}
                     >
-                      <svg
-                        className="w-5 h-5 mr-2 text-gray-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
                       <span>Settings</span>
                     </Link>
-
                     <Link
                       to="/"
-                      className="flex items-center px-4 py-2 hover:bg-gray-100"
+                      className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                       onClick={handleLogout}
                     >
-                      <svg
-                        className="w-5 h-5 mr-2 text-gray-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
                       <span>Logout</span>
                     </Link>
                   </div>
@@ -215,15 +203,25 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex space-x-4">
+              {/* Bouton Login avec fond blanc lors du défilement */}
               <Link
                 to="/login"
-                className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-200"
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  navbarColor === "bg-[#003837]"
+                    ? "bg-white text-green-950 hover:bg-gray-100 hover:shadow-md"
+                    : "bg-gradient-to-r from-green-400 to-green-600 text-white hover:from-green-500 hover:to-green-700 hover:shadow-md"
+                }`}
               >
                 Login
               </Link>
+              {/* Bouton Sign Up */}
               <Link
                 to="/signup"
-                className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg hover:bg-yellow-300"
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  navbarColor === "bg-[#003837]"
+                    ? "bg-green-700 text-white hover:bg-green-800 hover:shadow-md"
+                    : "bg-gradient-to-r from-green-600 to-green-800 text-white hover:from-green-700 hover:to-green-900 hover:shadow-md"
+                }`}
               >
                 Sign Up
               </Link>
@@ -231,26 +229,26 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Menu Button */}
+        {/* Bouton du menu mobile */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-white text-2xl"
+          className="md:hidden text-white text-2xl hover:text-green-400 transition-colors duration-200"
         >
           ☰
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Menu mobile */}
       {isOpen && (
-        <div className="md:hidden bg-blue-700 flex flex-col items-center py-4 mt-4 space-y-4">
+        <div className="md:hidden bg-green-900 flex flex-col items-center py-4 space-y-4">
           {navItems.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className={`px-3 py-1 rounded-full transition-colors duration-200 ${
+              className={`px-3 py-1 rounded-full transition-all duration-300 ${
                 location.pathname === item.to
-                  ? "bg-white text-blue-600"
-                  : "hover:text-gray-300"
+                  ? "bg-green-700 text-white shadow-lg"
+                  : "text-white hover:bg-green-800 hover:text-white hover:shadow-md"
               }`}
               onClick={() => setIsOpen(false)}
             >
@@ -261,10 +259,10 @@ const Navbar = () => {
           {isAuthenticated ? (
             <div className="flex flex-col items-center space-y-4 w-full">
               <div className="flex space-x-4">
-                {/* Notifications Button */}
+                {/* Bouton de notifications */}
                 <Link
                   to="/notifications"
-                  className="bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200"
+                  className="bg-green-700 text-white p-2 rounded-full hover:bg-green-800 hover:shadow-md transition-all duration-300"
                   onClick={() => setIsOpen(false)}
                 >
                   <svg
@@ -282,10 +280,10 @@ const Navbar = () => {
                   </svg>
                 </Link>
 
-                {/* Shopping Bag Button with Badge */}
+                {/* Bouton de panier avec badge */}
                 <Link
-                  to="/shopping-card"
-                  className="relative bg-white text-blue-600 p-2 rounded-full hover:bg-gray-200"
+                  to="/cart"
+                  className="relative bg-green-700 text-white p-2 rounded-full hover:bg-green-800 hover:shadow-md transition-all duration-300"
                   onClick={() => setIsOpen(false)}
                 >
                   <svg
@@ -308,42 +306,27 @@ const Navbar = () => {
                   )}
                 </Link>
 
-                {/* Account Button with Dropdown */}
+                {/* Bouton de compte avec menu déroulant */}
                 <div className="relative">
                   <button
                     onClick={handleAccountClick}
-                    className="bg-white text-blue-600 p-1 rounded-full hover:bg-gray-200 relative"
+                    className="bg-green-700 text-white p-1 rounded-full hover:bg-green-800 hover:shadow-md transition-all duration-300 relative"
                   >
                     <img
                       src={user.profilePicture}
                       alt="Avatar"
                       className="w-8 h-8 rounded-full"
                     />
-                    <span className="absolute bottom-0 left-0 w-3 h-3 bg-gray-800 rounded-full flex items-center justify-center">
-                      <svg
-                        className="w-2 h-2 text-white"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M19 9l-7 7-7-7"
-                        />
-                      </svg>
-                    </span>
                   </button>
                 </div>
               </div>
 
-              {/* Mobile Account Dropdown */}
+              {/* Menu déroulant du compte (mobile) */}
               {isAccountOpen && (
-                <div className="w-full bg-white text-gray-800 rounded-lg shadow-lg py-2">
+                <div className="w-full bg-green-900 text-white rounded-lg shadow-lg py-2">
                   <Link
                     to="/account"
-                    className="flex items-center px-4 py-2 hover:bg-gray-100"
+                    className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                     onClick={() => {
                       setIsOpen(false);
                       setIsAccountOpen(false);
@@ -356,78 +339,33 @@ const Navbar = () => {
                     />
                     <span>{user.name}</span>
                   </Link>
-                  <hr className="my-1 border-gray-200" />
+                  <hr className="my-1 border-green-800" />
                   <Link
                     to="/dashboard"
-                    className="flex items-center px-4 py-2 hover:bg-gray-100"
+                    className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                     onClick={() => setIsAccountOpen(false)}
                   >
-                    <svg
-                      className="w-5 h-5 mr-2 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 10l1.464-1.464a2 2 0 012.828 0L12 12m9 0l-1.464-1.464a2 2 0 00-2.828 0L12 12M12 12l-6.536 6.536a2 2 0 01-2.828 0L3 17m9 0l6.536 6.536a2 2 0 002.828 0L21 17"
-                      />
-                    </svg>
                     <span>Dashboard</span>
                   </Link>
                   <Link
                     to="/settings"
-                    className="flex items-center px-4 py-2 hover:bg-gray-100"
+                    className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                     onClick={() => {
                       setIsOpen(false);
                       setIsAccountOpen(false);
                     }}
                   >
-                    <svg
-                      className="w-5 h-5 mr-2 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
                     <span>Settings</span>
                   </Link>
                   <Link
                     to="/login"
-                    className="flex items-center px-4 py-2 hover:bg-gray-100"
+                    className="flex items-center px-4 py-2 hover:bg-green-800 transition-colors duration-200"
                     onClick={() => {
                       handleLogout();
                       setIsOpen(false);
                       setIsAccountOpen(false);
                     }}
                   >
-                    <svg
-                      className="w-5 h-5 mr-2 text-gray-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                      />
-                    </svg>
                     <span>Logout</span>
                   </Link>
                 </div>
@@ -435,16 +373,26 @@ const Navbar = () => {
             </div>
           ) : (
             <div className="flex flex-col space-y-2">
+              {/* Bouton Login avec fond blanc lors du défilement */}
               <Link
                 to="/login"
-                className="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-200"
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  navbarColor === "bg-[#003837]"
+                    ? "bg-white text-green-950 hover:bg-gray-100 hover:shadow-md"
+                    : "bg-gradient-to-r from-green-400 to-green-600 text-white hover:from-green-500 hover:to-green-700 hover:shadow-md"
+                }`}
                 onClick={() => setIsOpen(false)}
               >
                 Login
               </Link>
+              {/* Bouton Sign Up */}
               <Link
                 to="/signup"
-                className="bg-yellow-400 text-blue-900 px-4 py-2 rounded-lg hover:bg-yellow-300"
+                className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                  navbarColor === "bg-[#003837]"
+                    ? "bg-green-700 text-white hover:bg-green-800 hover:shadow-md"
+                    : "bg-gradient-to-r from-green-600 to-green-800 text-white hover:from-green-700 hover:to-green-900 hover:shadow-md"
+                }`}
                 onClick={() => setIsOpen(false)}
               >
                 Sign Up

@@ -156,7 +156,7 @@ const TransportAccountEditCard = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
       </div>
     );
   }
@@ -175,7 +175,7 @@ const TransportAccountEditCard = () => {
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <button
             onClick={toggleEdit}
-            className="absolute top-4 right-4 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="absolute top-4 right-4 bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500"
             disabled={uploadLoading}
           >
             {isEditing ? (
@@ -234,7 +234,7 @@ const TransportAccountEditCard = () => {
                     name="vehicleType"
                     value={formData.vehicleType}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                     placeholder="Enter vehicle type"
                     required
                     disabled={uploadLoading}
@@ -249,7 +249,7 @@ const TransportAccountEditCard = () => {
                     name="capacity"
                     value={formData.capacity}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                     placeholder="Enter capacity"
                     required
                     disabled={uploadLoading}
@@ -265,7 +265,7 @@ const TransportAccountEditCard = () => {
                   name="route"
                   value={formData.route}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                   placeholder="Enter route"
                   disabled={uploadLoading}
                 />
@@ -279,7 +279,7 @@ const TransportAccountEditCard = () => {
                   name="price"
                   value={formData.price}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                   placeholder="Enter price per trip"
                   disabled={uploadLoading}
                 />
@@ -345,7 +345,7 @@ const TransportAccountEditCard = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
                   disabled={uploadLoading}
                 >
                   Save Changes

@@ -31,7 +31,7 @@ const Transport = () => {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto p-6 flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-700"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
         <p className="ml-4 text-gray-600">Loading products...</p>
       </div>
     );
@@ -46,7 +46,7 @@ const Transport = () => {
         </p>
         <button
           onClick={() => dispatch(transportThunks.fetchItems())} // Retry fetch
-          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-green-700"
         >
           Retry
         </button>
@@ -56,11 +56,11 @@ const Transport = () => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-blue-700 text-center">
-        Sell Recyclable Items
+      <h1 className="text-3xl font-bold text-green-700 text-center">
+        Find transport services here
       </h1>
       <p className="text-gray-600 mt-2 text-center">
-        Sell plastic bottles, paper, and other recyclables easily.
+        Compare and book transport services
       </p>
 
       {/* Filters Component */}

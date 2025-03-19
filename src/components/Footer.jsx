@@ -3,14 +3,14 @@ import { FaFacebook, FaTwitter, FaInstagram } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="bg-indigo-700 text-white py-8 mt-0">
+    <footer className="bg-green-950 text-white py-8 mt-0">
       <div className="max-w-7xl mx-auto px-6 md:px-8">
         {/* Footer Links */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* Left Section */}
           <div className="text-center md:text-left">
             <h2 className="text-2xl font-bold tracking-tight">SpareXchange</h2>
-            <p className="text-sm mt-3 text-gray-200 max-w-xs mx-auto md:mx-0">
+            <p className="text-sm mt-3 text-gray-300 max-w-xs mx-auto md:mx-0">
               Your platform to Sell, Exchange, Donate, Freelance & Transport.
             </p>
           </div>
@@ -22,7 +22,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/"
-                  className="text-gray-200 hover:text-indigo-200 transition-colors duration-200"
+                  className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Home
                 </Link>
@@ -30,7 +30,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/sell"
-                  className="text-gray-200 hover:text-indigo-200 transition-colors duration-200"
+                  className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Sell
                 </Link>
@@ -38,7 +38,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/exchange"
-                  className="text-gray-200 hover:text-indigo-200 transition-colors duration-200"
+                  className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Exchange
                 </Link>
@@ -46,7 +46,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/donate"
-                  className="text-gray-200 hover:text-indigo-200 transition-colors duration-200"
+                  className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Donate
                 </Link>
@@ -54,7 +54,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/freelance"
-                  className="text-gray-200 hover:text-indigo-200 transition-colors duration-200"
+                  className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Freelance
                 </Link>
@@ -62,7 +62,7 @@ const Footer = () => {
               <li>
                 <Link
                   to="/transport"
-                  className="text-gray-200 hover:text-indigo-200 transition-colors duration-200"
+                  className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Transport
                 </Link>
@@ -76,19 +76,19 @@ const Footer = () => {
             <div className="flex space-x-6 mt-4 justify-center md:justify-start">
               <a
                 href="/"
-                className="text-gray-200 hover:text-indigo-200 text-2xl transition-colors duration-200 hover:scale-110"
+                className="text-gray-300 hover:text-green-300 text-2xl transition-colors duration-200 hover:scale-110"
               >
                 <FaFacebook />
               </a>
               <a
                 href="/"
-                className="text-gray-200 hover:text-indigo-200 text-2xl transition-colors duration-200 hover:scale-110"
+                className="text-gray-300 hover:text-green-300 text-2xl transition-colors duration-200 hover:scale-110"
               >
                 <FaTwitter />
               </a>
               <a
                 href="/"
-                className="text-gray-200 hover:text-indigo-200 text-2xl transition-colors duration-200 hover:scale-110"
+                className="text-gray-300 hover:text-green-300 text-2xl transition-colors duration-200 hover:scale-110"
               >
                 <FaInstagram />
               </a>
@@ -97,7 +97,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright */}
-        <div className="mt-8 border-t border-indigo-500/50 pt-4 text-center">
+        <div className="mt-8 border-t border-green-800/50 pt-4 text-center">
           <p className="text-sm text-gray-300">
             © {new Date().getFullYear()} SpareXchange. All rights reserved.
           </p>

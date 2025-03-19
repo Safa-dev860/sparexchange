@@ -2,9 +2,6 @@
 import React from "react";
 
 const ProfileSection = ({ user }) => {
-  // Log user data for debugging
-  console.log(user);
-
   return (
     <div className="w-full bg-white shadow-lg p-6 rounded-xl mt-0 transition-all hover:shadow-xl">
       {/* Profile Picture */}

@@ -30,7 +30,7 @@ const TransportAccountCard = ({ item }) => {
         />
         <h2 className="text-lg font-semibold mt-2">{item.vehicleType}</h2>
         <p className="text-gray-600">by {item.owner.name}</p>
-        <p className="text-blue-600 font-bold">${item.price} per trip</p>
+        <p className="text-green-600 font-bold">${item.price} per trip</p>
         <p className="text-gray-400 text-sm">Route: {item.route}</p>
 
         {/* Hover overlay with icon buttons */}

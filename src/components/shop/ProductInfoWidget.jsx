@@ -49,7 +49,7 @@ const ProductInfoWidget = ({
           {isOwner ? (
             <button
               onClick={onEditProduct}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+              className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
             >
               Visit Your Product
             </button>
@@ -64,7 +64,7 @@ const ProductInfoWidget = ({
               </button>
               <button
                 onClick={onAddToCart}
-                className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
+                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
               >
                 Add to Cart
               </button>

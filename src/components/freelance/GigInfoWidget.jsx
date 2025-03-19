@@ -90,7 +90,7 @@ const GigInfoWidget = ({ gig, onToggleFavorite, onSendRequest }) => {
               e.preventDefault();
               onToggleFavorite();
             }}
-            className="p-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-200 flex items-center justify-center"
+            className="p-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-200 flex items-center justify-center"
           >
             <FaHeart />
           </button>
@@ -99,7 +99,7 @@ const GigInfoWidget = ({ gig, onToggleFavorite, onSendRequest }) => {
               e.preventDefault();
               onSendRequest();
             }}
-            className="flex-1 p-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-200"
+            className="flex-1 p-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all duration-200"
           >
             Hire Now
           </button>

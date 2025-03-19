@@ -45,7 +45,7 @@ const ExchangeAccountEdit = () => {
         images: [...exchangeInstance.images],
       };
       setFormData(initialFormData);
-      console.log("Initial formData set:", initialFormData);
+      // console.log("Initial formData set:", initialFormData);
     } else if (!loading && !error) {
       dispatch(exchangeThunks.fetchItems())
         .unwrap()
@@ -130,11 +130,11 @@ const ExchangeAccountEdit = () => {
     };
 
     try {
-      console.log("Updating exchange item...");
+      // console.log("Updating exchange item...");
       const result = await dispatch(
         exchangeThunks.updateItem({ id: exchange.id, data: updatedData })
       ).unwrap();
-      console.log("Exchange item updated successfully:", result);
+      // console.log("Exchange item updated successfully:", result);
       setIsEditing(false);
       setExchange(Exchange.fromFirestore(updatedData));
       alert("Exchange item updated successfully!");
