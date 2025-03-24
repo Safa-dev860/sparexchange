@@ -55,7 +55,7 @@ const Exchange = () => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="max-w-7xl mx-auto p-6 mt-32">
       <h1 className="text-3xl font-bold text-green-700 text-center">
         Exchange Recyclable Items
       </h1>

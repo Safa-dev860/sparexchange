@@ -29,7 +29,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  to="/sell"
+                  to="/shop"
                   className="text-gray-300 hover:text-green-300 transition-colors duration-200 hover:underline"
                 >
                   Sell

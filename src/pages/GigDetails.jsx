@@ -58,7 +58,7 @@ const GigDetails = () => {
   if (!gig) return <p className="text-center mt-10 text-lg">Loading...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
+    <div className="max-w-4xl mx-auto p-6 mt-32">
       {/* Image Carousel */}
       <div className="overflow-x-auto whitespace-nowrap flex space-x-4 p-4 border-b">
         {gig.images.map((img, index) => (

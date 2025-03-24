@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react"; // Importez useState et useEffect
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   FaLeaf,
@@ -23,54 +23,63 @@ import {
 import { motion } from "framer-motion";
 import Navbar from "../components/Navbar";
 import spareImage from "../assets/spare.jpg";
-// import sophieImage from "../assets/sophie.webp"; // Import de l'image Sophie
+import sophieImage from "../assets/sophie.webp"; // Import de l'image Sophie
 import minImage from "../assets/min.png"; // Import de l'image min.jpg
 import paImage from "../assets/pa.png"; // Import de l'image search.jpg
 import chatImage from "../assets/chat.jpg"; // Import de l'image search.jpg
 import userImage from "../assets/user.jpg"; //
 import user2Image from "../assets/user2.jpg"; //
 import user3Image from "../assets/user3.jpg"; //
-
 import { FaComments } from "react-icons/fa";
 
 const Home = () => {
-  const [currentHeroImage, setCurrentHeroImage] = useState(spareImage); // État pour l'image actuelle
-  const [currentText, setCurrentText] = useState(
-    "SpareXchange: Your Zero-Waste Marketplace"
-  ); // État pour le texte actuel
+  // Array of hero images
+  const heroImages = [spareImage, sophieImage];
 
-  // Fonction pour alterner les images et le texte dans la section Hero
+  // Array of corresponding texts
+  const heroTexts = [
+    "SpareXchange: Your Zero-Waste Marketplace",
+    "You think it's trash? Think again!",
+  ];
+
+  const [currentHeroIndex, setCurrentHeroIndex] = useState(0); // Index for the current hero image
+  const [currentHeroImage, setCurrentHeroImage] = useState(heroImages[0]); // Current hero image
+  const [currentText, setCurrentText] = useState(heroTexts[0]); // Current hero text
+
+  // Function to cycle through hero images and texts
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentHeroImage((prevImage) => prevImage === spareImage);
-      setCurrentText((prevText) =>
-        prevText === "SpareXchange: Your Zero-Waste Marketplace"
-          ? "You think it's trash? Think again!"
-          : "SpareXchange: Your Zero-Waste Marketplace"
-      );
-    }, 3000); // Change d'image et de texte toutes les 3 secondes
+      setCurrentHeroIndex((prevIndex) => (prevIndex + 1) % heroImages.length);
+    }, 3000); // Change image and text every 3 seconds
+
     return () => clearInterval(interval);
-  }, []);
+  }, [heroImages.length]);
+
+  // Update the current hero image and text whenever the index changes
+  useEffect(() => {
+    setCurrentHeroImage(heroImages[currentHeroIndex]);
+    setCurrentText(heroTexts[currentHeroIndex]);
+  }, [currentHeroIndex]);
 
   return (
     <div className="w-full bg-black text-white flex flex-col items-center text-center overflow-hidden">
       <Navbar />
 
-      {/* Hero Section avec image de fond */}
+      {/* Hero Section with background image */}
       <div
         className="relative flex flex-col md:flex-row justify-center items-center px-4 sm:px-10"
         style={{
-          backgroundImage: { currentHeroImage },
+          backgroundImage: `url(${currentHeroImage})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          height: "100vh", // Occupe toute la hauteur de l'écran
-          width: "100vw", // Occupe toute la largeur de l'écran
-          margin: 0, // Supprime les marges
-          padding: 0, // Supprime les paddings
+          height: "100vh", // Full screen height
+          width: "100vw", // Full screen width
+          margin: 0, // Remove margins
+          padding: 0, // Remove paddings
         }}
       >
-        {/* Overlay gris foncé pour améliorer la lisibilité */}
+        {/* Dark overlay for better readability */}
         <div className="absolute inset-0 bg-black opacity-70"></div>
 
         <div className="relative z-10 md:w-1/2 text-left px-4 sm:px-0">
@@ -79,7 +88,7 @@ const Home = () => {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
-            key={currentText} // Ajoutez une clé pour déclencher l'animation à chaque changement de texte
+            key={currentText} // Trigger animation on text change
           >
             {currentText}
           </motion.h1>
@@ -96,7 +105,7 @@ const Home = () => {
           </motion.p>
 
           <Link
-            to="/sell"
+            to="/"
             className="mt-8 inline-block bg-gradient-to-r from-green-500 to-green-700 text-white px-6 py-2 rounded-md text-sm sm:text-lg hover:from-green-600 hover:to-green-800 transition-all"
           >
             Join Now
@@ -221,7 +230,7 @@ const Home = () => {
           transition={{ delay: 0.5, duration: 1 }}
         >
           <Link
-            to="/sell"
+            to="/shop"
             className="bg-white border border-gray-200 rounded-lg shadow-md p-6 hover:shadow-lg hover:scale-105 transition-all duration-300 flex flex-col items-center"
           >
             <FaShoppingCart className="text-4xl mb-4 text-gray-800" />
@@ -254,7 +263,7 @@ const Home = () => {
           </Link>
 
           <Link
-            to="/services"
+            to="/freelance"
             className="bg-white border border-gray-200 rounded-lg shadow-md p-6 hover:shadow-lg hover:scale-105 transition-all duration-300 flex flex-col items-center"
           >
             <FaTools className="text-4xl mb-4 text-gray-800" />

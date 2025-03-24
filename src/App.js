@@ -30,6 +30,8 @@ import FreelanceAccountEdit from "./components/account/FreelanceAccountEditCard"
 import DoneAccountEdit from "./components/account/DoneAccountEditCard";
 import ExchangeAccountEdit from "./components/account/ExchangeAccountEditCard";
 import TransportAccountEditCard from "./components/account/TransportAccountEditCard";
+import Notification from "./pages/Notification";
+import Settings from "./pages/Settings";
 
 const App = () => {
   const [isAdmin] = useState(false);
@@ -39,51 +41,49 @@ const App = () => {
         {!isAdmin ? (
           <Router>
             <Navbar />
-            <div className="pt-16">
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/shop" element={<Shop />} />
-                <Route path="/exchange" element={<Exchange />} />
-                <Route path="/donate" element={<Donate />} />
-                <Route path="/freelance" element={<Freelance />} />
-                <Route path="/transport" element={<Transport />} />
-                <Route path="/login" element={<SignInPage />} />
-                <Route path="/signup" element={<SignUpPage />} />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/shop" element={<Shop />} />
+              <Route path="/exchange" element={<Exchange />} />
+              <Route path="/donate" element={<Donate />} />
+              <Route path="/freelance" element={<Freelance />} />
+              <Route path="/transport" element={<Transport />} />
+              <Route path="/login" element={<SignInPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+              <Route path="/forgot-password" element={<ForgetPasswordPage />} />
+
+              <Route element={<ProtectedRoute />}>
+                {/* protected routes  ProductAccountEdit */}
+                <Route path="/products/:id" element={<ProductDetails />} />
                 <Route
-                  path="/forgot-password"
-                  element={<ForgetPasswordPage />}
+                  path="/products/:id/edit"
+                  element={<ProductAccountEdit />}
                 />
-                <Route element={<ProtectedRoute />}>
-                  {/* protected routes  ProductAccountEdit */}
-                  <Route path="/products/:id" element={<ProductDetails />} />
-                  <Route
-                    path="/products/:id/edit"
-                    element={<ProductAccountEdit />}
-                  />
-                  <Route
-                    path="/gigs/:id/edit"
-                    element={<FreelanceAccountEdit />}
-                  />
-                  <Route path="/done/:id/edit" element={<DoneAccountEdit />} />
-                  <Route
-                    path="/exchanges/:id/edit"
-                    element={<ExchangeAccountEdit />}
-                  />
-                  <Route
-                    path="/transport/:id/edit"
-                    element={<TransportAccountEditCard />}
-                  />
-                  <Route path="/exchanges/:id" element={<ExchangeDetails />} />
-                  <Route path="/gigs/:id" element={<GigDetails />} />
-                  <Route path="/shop/:id" element={<ProductDetails />} />
-                  <Route path="/done/:id" element={<DoneDetails />} />
-                  <Route path="/transport/:id" element={<TransportDetails />} />
-                  <Route path="/account" element={<AccountPage />} />
-                  <Route path="/shopping-card" element={<ShoppingCart />} />
-                  <Route path="/dashboard" element={<DashboardPage />} />
-                </Route>
-              </Routes>
-            </div>
+                <Route
+                  path="/gigs/:id/edit"
+                  element={<FreelanceAccountEdit />}
+                />
+                <Route path="/done/:id/edit" element={<DoneAccountEdit />} />
+                <Route
+                  path="/exchanges/:id/edit"
+                  element={<ExchangeAccountEdit />}
+                />
+                <Route
+                  path="/transport/:id/edit"
+                  element={<TransportAccountEditCard />}
+                />
+                <Route path="/exchanges/:id" element={<ExchangeDetails />} />
+                <Route path="/gigs/:id" element={<GigDetails />} />
+                <Route path="/shop/:id" element={<ProductDetails />} />
+                <Route path="/done/:id" element={<DoneDetails />} />
+                <Route path="/transport/:id" element={<TransportDetails />} />
+                <Route path="/account" element={<AccountPage />} />
+                <Route path="/shopping-card" element={<ShoppingCart />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route path="/notifications" element={<Notification />} />
+                <Route path="/settings" element={<Settings />} />
+              </Route>
+            </Routes>
             <Footer />
           </Router>
         ) : (

@@ -1,10 +1,12 @@
-// components/ExchangeAccountEdit.js
 import React, { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { exchangeThunks } from "../../redux/slices/categorySlice"; // Adjust path
 import { Exchange } from "../../models/ExchangeModel"; // Adjust path
 import useCloudinaryUpload from "../../hooks/useCloudinaryUpload"; // Adjust path
+import LocationPicker from "../LocationPicker"; // Import the reusable LocationPicker component
+import ConditionDropdown from "../ConditionDropDown"; // Import the reusable ConditionDropdown component
+import CustomPopup from "../CustomPopup"; // Import the CustomPopup component
 
 const ExchangeAccountEdit = () => {
   const { id } = useParams();
@@ -21,10 +23,19 @@ const ExchangeAccountEdit = () => {
     itemOffered: "",
     itemWanted: "",
     condition: "new",
-    location: "",
+    location: null, // Store location as an object { lat, lng, city }
     images: [],
   });
   const [uploadError, setUploadError] = useState(null);
+  const [showMap, setShowMap] = useState(false); // State to control the map modal
+  const [showPopup, setShowPopup] = useState(false); // State to control the CustomPopup
+  const [popupConfig, setPopupConfig] = useState({
+    title: "",
+    message: "",
+    onConfirm: null,
+    confirmText: "",
+    cancelText: "",
+  });
 
   const {
     uploadImage,
@@ -41,11 +52,10 @@ const ExchangeAccountEdit = () => {
         itemOffered: exchangeInstance.itemOffered || "",
         itemWanted: exchangeInstance.itemWanted || "",
         condition: exchangeInstance.condition || "new",
-        location: exchangeInstance.location || "",
+        location: exchangeInstance.location || null, // Initialize location as an object
         images: [...exchangeInstance.images],
       };
       setFormData(initialFormData);
-      // console.log("Initial formData set:", initialFormData);
     } else if (!loading && !error) {
       dispatch(exchangeThunks.fetchItems())
         .unwrap()
@@ -60,7 +70,7 @@ const ExchangeAccountEdit = () => {
               itemOffered: exchangeInstance.itemOffered || "",
               itemWanted: exchangeInstance.itemWanted || "",
               condition: exchangeInstance.condition || "new",
-              location: exchangeInstance.location || "",
+              location: exchangeInstance.location || null, // Initialize location as an object
               images: [...exchangeInstance.images],
             };
             setFormData(initialFormData);
@@ -72,10 +82,18 @@ const ExchangeAccountEdit = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => {
-      const newFormData = { ...prev, [name]: value };
-      return newFormData;
-    });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleLocationSelect = (location) => {
+    setFormData((prev) => ({
+      ...prev,
+      location, // Update the location object
+    }));
+    setShowMap(false); // Close the map modal
   };
 
   const handleImageChange = async (e) => {
@@ -120,27 +138,39 @@ const ExchangeAccountEdit = () => {
     }
     const updatedData = {
       id: exchange.id,
-      ownerId: exchange.ownerId, // Ensure ownerId is included and unchanged
+      ownerId: exchange.ownerId,
       itemOffered: formData.itemOffered,
       itemWanted: formData.itemWanted,
       condition: formData.condition,
-      location: formData.location,
+      location: formData.location, // Save the location object
       images: [...formData.images],
       updatedAt: new Date(exchange.updatedAt),
     };
 
     try {
-      // console.log("Updating exchange item...");
       const result = await dispatch(
         exchangeThunks.updateItem({ id: exchange.id, data: updatedData })
       ).unwrap();
-      // console.log("Exchange item updated successfully:", result);
       setIsEditing(false);
       setExchange(Exchange.fromFirestore(updatedData));
-      alert("Exchange item updated successfully!");
+      // Show success popup
+      setPopupConfig({
+        title: "Success",
+        message: "Exchange item updated successfully!",
+        onConfirm: () => setShowPopup(false),
+        confirmText: "OK",
+      });
+      setShowPopup(true);
     } catch (err) {
       console.error("Failed to update exchange item:", err);
-      alert("Failed to update exchange item. Please try again.");
+      // Show error popup
+      setPopupConfig({
+        title: "Error",
+        message: "Failed to update exchange item. Please try again.",
+        onConfirm: () => setShowPopup(false),
+        confirmText: "OK",
+      });
+      setShowPopup(true);
     }
   };
 
@@ -151,7 +181,9 @@ const ExchangeAccountEdit = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500">
+          Lodding ...
+        </div>
       </div>
     );
   }
@@ -165,7 +197,7 @@ const ExchangeAccountEdit = () => {
   }
 
   return (
-    <div className="w-full flex flex-col bg-gray-100 min-h-screen">
+    <div className="w-full flex flex-col bg-gray-100 min-h-screen mt-24">
       <div className="w-full sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto p-6 md:p-8 flex-1">
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <button
@@ -255,14 +287,9 @@ const ExchangeAccountEdit = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   Condition
                 </label>
-                <input
-                  type="text"
-                  name="condition"
+                <ConditionDropdown
                   value={formData.condition}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
-                  placeholder="Enter condition"
-                  required
                   disabled={uploadLoading}
                 />
               </div>
@@ -270,15 +297,27 @@ const ExchangeAccountEdit = () => {
                 <label className="block text-sm font-medium text-gray-700">
                   Location
                 </label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
-                  placeholder="Enter location"
+                <button
+                  type="button"
+                  onClick={() => setShowMap(true)}
+                  className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 text-left"
                   disabled={uploadLoading}
-                />
+                >
+                  {formData.location?.city
+                    ? `Location Selected: ${formData.location.city}`
+                    : "Select a Location"}
+                </button>
+                {showMap && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-lg w-11/12 max-w-2xl">
+                      <LocationPicker
+                        initialLocation={formData.location}
+                        onSelect={handleLocationSelect}
+                        onClose={() => setShowMap(false)}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -364,7 +403,9 @@ const ExchangeAccountEdit = () => {
                 </p>
                 <p className="text-gray-700">
                   <span className="font-semibold">Location:</span>{" "}
-                  {exchange.location}
+                  {typeof exchange.location === "object"
+                    ? exchange.location.city
+                    : exchange.location}
                 </p>
               </div>
               <div>
@@ -391,6 +432,17 @@ const ExchangeAccountEdit = () => {
           )}
         </div>
       </div>
+
+      {/* Custom Popup */}
+      <CustomPopup
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        onConfirm={popupConfig.onConfirm}
+        confirmText={popupConfig.confirmText}
+        cancelText={popupConfig.cancelText}
+      />
     </div>
   );
 };

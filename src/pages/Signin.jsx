@@ -52,7 +52,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100">
+    <div className="flex flex-col min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 mt-32">
       <div className="flex flex-col flex-1 md:flex-row p-6 gap-8 justify-center items-center">
         <div className="w-full max-w-md bg-white shadow-lg p-8 rounded-xl">
           <h3 className="text-3xl font-bold mb-6 text-center text-gray-800 tracking-tight">
@@ -79,7 +79,7 @@ const SignInPage = () => {
                 name="email"
                 value={formData.email}
                 onChange={handleFormChange}
-                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-400"
+                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-green-400"
                 required
               />
             </div>
@@ -97,14 +97,14 @@ const SignInPage = () => {
                 name="password"
                 value={formData.password}
                 onChange={handleFormChange}
-                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 hover:border-indigo-400"
+                className="w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 hover:border-green-400"
                 required
               />
             </div>
 
             <button
               type="submit"
-              className={`w-full p-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-all duration-200 ${
+              className={`w-full p-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-all duration-200 ${
                 status === "loading" ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={status === "loading"}
@@ -131,7 +131,7 @@ const SignInPage = () => {
 
             <button
               onClick={handleFacebookSignIn}
-              className="flex items-center justify-center w-full bg-blue-600 text-white rounded-lg py-3 font-medium hover:bg-blue-700 hover:shadow-md transition-all duration-200"
+              className="flex items-center justify-center w-full bg-green-600 text-white rounded-lg py-3 font-medium hover:bg-green-700 hover:shadow-md transition-all duration-200"
             >
               <FaFacebook className="mr-3 text-2xl" />
               Sign in with Facebook
@@ -141,7 +141,7 @@ const SignInPage = () => {
           <div className="mt-6 text-center">
             <a
               href="/forgot-password"
-              className="text-sm text-indigo-600 hover:text-indigo-800 hover:underline transition-colors duration-200"
+              className="text-sm text-green-600 hover:text-green-800 hover:underline transition-colors duration-200"
             >
               Forgot your password?
             </a>

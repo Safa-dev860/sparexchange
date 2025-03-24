@@ -1,14 +1,35 @@
-// components/account/ExchangeForm.js
-import React from "react";
+// export default ExchangeForm;
+import React, { useState } from "react";
 import PropTypes from "prop-types";
+import LocationPicker from "../LocationPicker"; // Import the reusable component
+
+const initialFormData = {
+  itemOffered: "",
+  itemWanted: "",
+  condition: "new",
+  location: null, // Default to no location
+  images: [],
+};
 
 const ExchangeForm = ({
-  formData,
+  formData = initialFormData,
   handleFormChange,
   handleSubmit,
   isLoading,
   uploadError,
 }) => {
+  const [showMap, setShowMap] = useState(false);
+
+  // Handle location selection
+  const handleLocationSelect = (location) => {
+    handleFormChange({
+      target: {
+        name: "location",
+        value: location,
+      },
+    });
+  };
+
   return (
     <div className="w-full bg-white p-6 rounded-xl shadow-lg mt-0">
       <h2 className="text-2xl font-bold text-gray-800 mb-6 tracking-tight">
@@ -24,10 +45,10 @@ const ExchangeForm = ({
             name="itemOffered"
             value={formData.itemOffered}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
             required
@@ -42,10 +63,10 @@ const ExchangeForm = ({
             name="itemWanted"
             value={formData.itemWanted}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
           />
@@ -58,10 +79,10 @@ const ExchangeForm = ({
             name="condition"
             value={formData.condition}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:green-indigo-400"
             }`}
             disabled={isLoading}
           >
@@ -74,18 +95,31 @@ const ExchangeForm = ({
           <label className="block text-gray-700 font-medium mb-2">
             Location
           </label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+          <button
+            type="button"
+            onClick={() => setShowMap(true)}
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 text-left ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
-          />
+          >
+            {formData.location?.city
+              ? formData.location.city
+              : "Select a Location"}
+          </button>
+          {showMap && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className="bg-white p-4 rounded-lg w-11/12 max-w-2xl">
+                <LocationPicker
+                  initialLocation={formData.location}
+                  onSelect={handleLocationSelect}
+                  onClose={() => setShowMap(false)}
+                />
+              </div>
+            </div>
+          )}
         </div>
         <div className="mb-5">
           <label className="block text-gray-700 font-medium mb-2">Images</label>
@@ -108,7 +142,7 @@ const ExchangeForm = ({
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full p-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 ${
+          className={`w-full p-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >

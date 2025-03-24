@@ -237,7 +237,7 @@ const SignUpPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen bg-gray-100 mt-32">
       <div className="flex flex-col flex-1 md:flex-row p-6 gap-6 justify-center items-center">
         <div className="w-full max-w-md bg-white shadow-md p-6 rounded-lg">
           <h3 className="text-lg font-semibold mb-4 text-center">Sign Up</h3>
@@ -305,7 +305,7 @@ const SignUpPage = () => {
           <div className="mt-4 text-center">
             <p className="text-sm">
               Already have an account?{" "}
-              <a href="/login" className="text-blue-500 hover:underline">
+              <a href="/login" className="text-green-500 hover:underline">
                 Sign In
               </a>
             </p>

@@ -14,6 +14,8 @@ import {
   get,
 } from "firebase/database";
 import { useNavigate } from "react-router-dom";
+import CustomPopup from "../CustomPopup"; // Import the CustomPopup component
+
 const getConversationId = (userId, productId) => `${userId}_${productId}`;
 
 const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
@@ -25,6 +27,10 @@ const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
   const [isConversationVisible, setIsConversationVisible] = useState(false);
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate(); // Get the navigate function
+
+  // State for the custom popup
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
 
   useEffect(() => {
     if (exchange.id && user.uid) {
@@ -77,9 +83,18 @@ const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
       setNewMessage("");
     }
   };
+
   const onClick = () => {
     navigate(`/exchanges/${exchange.id}/edit`);
   };
+
+  // Function to handle confirmation (if needed)
+  const handleConfirm = () => {
+    // Perform any action on confirmation
+    console.log("Confirmed!");
+    setIsPopupOpen(false); // Close the popup
+  };
+
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 flex flex-col w-full max-w-4xl mx-auto">
       {isConversationVisible ? (
@@ -118,7 +133,9 @@ const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
               </p>
               <p className="text-sm text-gray-500 mb-2">
                 <span className="font-semibold">Location:</span>{" "}
-                {exchange.location}
+                {typeof exchange.location === "object"
+                  ? exchange.location.city
+                  : exchange.location}
               </p>
               <p className="text-sm text-gray-500 mb-2">
                 <span className="font-semibold">Owner:</span>{" "}
@@ -228,7 +245,9 @@ const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
             </p>
             <p className="text-sm text-gray-500 mb-2">
               <span className="font-semibold">Location:</span>{" "}
-              {exchange.location}
+              {typeof exchange.location === "object"
+                ? exchange.location.city
+                : exchange.location}
             </p>
             <p className="text-sm text-gray-500 mb-2">
               <span className="font-semibold">Owner:</span>{" "}
@@ -277,6 +296,16 @@ const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
           </div>
         </div>
       )}
+
+      {/* Custom Popup */}
+      <CustomPopup
+        isOpen={isPopupOpen}
+        onClose={() => setIsPopupOpen(false)}
+        title="Notification"
+        message={popupMessage}
+        onConfirm={handleConfirm}
+        confirmText="OK"
+      />
     </div>
   );
 };

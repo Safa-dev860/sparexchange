@@ -1,32 +1,18 @@
 import React, { useState } from "react";
 import PropTypes from "prop-types";
-import { MapContainer, TileLayer, Marker } from "react-leaflet";
-import L from "leaflet"; // Import Leaflet for custom icon
-import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
-
-// Define the SVG marker icon
-const svgIcon = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
-    <path fill="#FF0000" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-  </svg>
-`;
-
-// Create a Leaflet icon from the SVG
-const customMarkerIcon = L.divIcon({
-  html: svgIcon,
-  iconSize: [36, 36], // Size of the SVG
-  iconAnchor: [18, 36], // Anchor point (bottom center of the pin)
-  className: "", // Remove default Leaflet class to avoid styling conflicts
-});
+import LocationPicker from "../LocationPicker";
 
 const initialFormData = {
   name: "",
   price: "",
   description: "",
   category: "",
-  location: { lat: 33.8869, lng: 9.5375 }, // Default to Tunisia's coordinates
+  location: null, // Changed to match ExchangeForm's structure
   images: [],
 };
+
+// Predefined categories
+const categories = ["Plastic", "Paper", "Glass", "Metal", "Electronics"];
 
 const ProductForm = ({
   formData = initialFormData,
@@ -37,18 +23,14 @@ const ProductForm = ({
 }) => {
   const [showMap, setShowMap] = useState(false);
 
-  // Predefined categories
-  const categories = ["Plastic", "Paper", "Glass", "Metal", "Electronics"];
-
   // Handle location selection
-  const handleLocationSelect = (lat, lng) => {
+  const handleLocationSelect = (location) => {
     handleFormChange({
       target: {
         name: "location",
-        value: { lat, lng },
+        value: location,
       },
     });
-    setShowMap(false);
   };
 
   return (
@@ -64,10 +46,10 @@ const ProductForm = ({
             name="name"
             value={formData.name}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
             required
@@ -81,10 +63,10 @@ const ProductForm = ({
             value={formData.price}
             onChange={handleFormChange}
             step="0.01"
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
             required
@@ -98,7 +80,7 @@ const ProductForm = ({
             name="description"
             value={formData.description}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
                 : "hover:border-indigo-400"
@@ -115,10 +97,10 @@ const ProductForm = ({
             name="category"
             value={formData.category}
             onChange={handleFormChange}
-            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 ${
+            className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-200 ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
             required
@@ -141,20 +123,18 @@ const ProductForm = ({
             className={`w-full p-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-700 text-left ${
               isLoading
                 ? "opacity-50 cursor-not-allowed"
-                : "hover:border-indigo-400"
+                : "hover:border-green-400"
             }`}
             disabled={isLoading}
           >
-            {formData.location?.lat && formData.location?.lng
-              ? `Lat: ${formData.location.lat.toFixed(
-                  4
-                )}, Lng: ${formData.location.lng.toFixed(4)}`
-              : "Select Location"}
+            {formData.location?.city
+              ? formData.location.city
+              : "Select a Location"}
           </button>
           {showMap && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white p-4 rounded-lg w-11/12 max-w-2xl">
-                <TunisiaMap
+                <LocationPicker
                   initialLocation={formData.location}
                   onSelect={handleLocationSelect}
                   onClose={() => setShowMap(false)}
@@ -184,7 +164,7 @@ const ProductForm = ({
         <button
           type="submit"
           disabled={isLoading}
-          className={`w-full p-3 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition-colors duration-200 ${
+          className={`w-full p-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors duration-200 ${
             isLoading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
@@ -194,68 +174,6 @@ const ProductForm = ({
           <p className="text-red-500 mt-3 text-sm">{uploadError}</p>
         )}
       </form>
-    </div>
-  );
-};
-
-// Tunisia Map component with SVG marker and buttons in a row
-const TunisiaMap = ({ initialLocation, onSelect, onClose }) => {
-  const [selectedLocation] = useState(
-    initialLocation.lat && initialLocation.lng
-      ? [initialLocation.lat, initialLocation.lng]
-      : null
-  );
-
-  // Component to handle map click events
-  const MapClickHandler = () => {
-    // const map = useMapEvents({
-    //   click(e) {
-    //     const { lat, lng } = e.latlng;
-    //     setSelectedLocation([lat, lng]);
-    //   },
-    // });
-    return null;
-  };
-
-  const handleConfirm = () => {
-    if (selectedLocation) {
-      onSelect(selectedLocation[0], selectedLocation[1]);
-    }
-  };
-
-  return (
-    <div>
-      <MapContainer
-        center={[33.8869, 9.5375]} // Center on Tunisia
-        zoom={6} // Zoom level to show all of Tunisia
-        style={{ height: "400px", width: "100%" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <MapClickHandler />
-        {selectedLocation && (
-          <Marker position={selectedLocation} icon={customMarkerIcon} />
-        )}
-      </MapContainer>
-      <div className="mt-4 flex justify-center space-x-4">
-        <button
-          type="button"
-          onClick={handleConfirm}
-          className="p-2 bg-green-500 text-white rounded-lg"
-          disabled={!selectedLocation} // Disable if no location is selected
-        >
-          Confirm Location
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          className="p-2 bg-red-500 text-white rounded-lg"
-        >
-          Close
-        </button>
-      </div>
     </div>
   );
 };

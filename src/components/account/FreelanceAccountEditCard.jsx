@@ -224,7 +224,7 @@ const FreelanceAccountEdit = () => {
   }
 
   return (
-    <div className="w-full flex flex-col bg-gray-100 min-h-screen">
+    <div className="w-full flex flex-col bg-gray-100 min-h-screen mt-24">
       <div className="w-full sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto p-6 md:p-8 flex-1">
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <button

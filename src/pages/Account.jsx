@@ -263,7 +263,7 @@ const AccountPage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="flex flex-col min-h-screen mt-24 bg-gray-100">
       <div className="flex flex-col md:flex-row flex-1 p-6 gap-4">
         {/* Left Sidebar */}
         <div className="flex flex-col md:w-1/3 bg-gray-100 gap-4">

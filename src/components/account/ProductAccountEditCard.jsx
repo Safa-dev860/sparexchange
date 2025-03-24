@@ -4,128 +4,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { productsThunks } from "../../redux/slices/categorySlice";
 import { Product } from "../../models/ProductModel";
-import useCloudinaryUpload from "../../hooks/useCloudinaryUpload"; // Adjust path
-import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
-import L from "leaflet"; // Import Leaflet for custom icon
-import "leaflet/dist/leaflet.css"; // Import Leaflet CSS
-
-// Define the SVG marker icon
-const svgIcon = `
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="36" height="36">
-    <path fill="#FF0000" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
-  </svg>
-`;
-
-// Create a Leaflet icon from the SVG
-const customMarkerIcon = L.divIcon({
-  html: svgIcon,
-  iconSize: [36, 36], // Size of the SVG
-  iconAnchor: [18, 36], // Anchor point (bottom center of the pin)
-  className: "", // Remove default Leaflet class to avoid styling conflicts
-});
-
-// Tunisia Map component for editing location
-const TunisiaMap = ({ initialLocation, onSelect, onClose }) => {
-  const [selectedLocation, setSelectedLocation] = useState(
-    initialLocation.lat && initialLocation.lng
-      ? [initialLocation.lat, initialLocation.lng]
-      : null
-  );
-
-  const MapClickHandler = () => {
-    useMapEvents({
-      click(e) {
-        const { lat, lng } = e.latlng;
-        setSelectedLocation([lat, lng]);
-      },
-    });
-    return null;
-  };
-
-  const handleConfirm = () => {
-    if (selectedLocation) {
-      onSelect(selectedLocation[0], selectedLocation[1]);
-    }
-  };
-
-  return (
-    <div>
-      <MapContainer
-        center={[33.8869, 9.5375]} // Center on Tunisia
-        zoom={6} // Zoom level to show all of Tunisia
-        style={{ height: "400px", width: "100%" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        />
-        <MapClickHandler />
-        {selectedLocation && (
-          <Marker position={selectedLocation} icon={customMarkerIcon} />
-        )}
-      </MapContainer>
-      <div className="mt-4 flex justify-center space-x-4">
-        <button
-          type="button"
-          onClick={handleConfirm}
-          className="p-2 bg-green-500 text-white rounded-lg"
-          disabled={!selectedLocation}
-        >
-          Confirm Location
-        </button>
-        <button
-          type="button"
-          onClick={onClose}
-          className="p-2 bg-red-500 text-white rounded-lg"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Read-only Map Popup component
-const LocationMapPopup = ({ location, onClose }) => {
-  const position =
-    location.lat && location.lng
-      ? [location.lat, location.lng]
-      : [33.8869, 9.5375]; // Default to Tunisia center if no location
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white p-4 rounded-lg w-11/12 max-w-2xl">
-        <MapContainer
-          center={position}
-          zoom={location.lat && location.lng ? 10 : 6} // Zoom in if location exists
-          style={{ height: "400px", width: "100%" }}
-          dragging={false}
-          touchZoom={false}
-          doubleClickZoom={false}
-          scrollWheelZoom={false}
-          zoomControl={false}
-        >
-          <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          />
-          {location.lat && location.lng && (
-            <Marker position={position} icon={customMarkerIcon} />
-          )}
-        </MapContainer>
-        <div className="mt-4 flex justify-center">
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-2 bg-gray-500 text-white rounded-lg"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
+import useCloudinaryUpload from "../../hooks/useCloudinaryUpload";
+import LocationPicker from "../LocationPicker";
+import CustomPopup from "../CustomPopup";
 
 const ProductAccountEdit = () => {
   const { id } = useParams();
@@ -145,8 +26,16 @@ const ProductAccountEdit = () => {
     price: "",
     category: "",
     description: "",
-    location: { lat: null, lng: null },
+    location: null,
     images: [],
+  });
+  const [showPopup, setShowPopup] = useState(false); // State to control the CustomPopup
+  const [popupConfig, setPopupConfig] = useState({
+    title: "",
+    message: "",
+    onConfirm: null,
+    confirmText: "",
+    cancelText: "",
   });
   const [uploadError, setUploadError] = useState(null);
   const [priceError, setPriceError] = useState(null);
@@ -167,13 +56,12 @@ const ProductAccountEdit = () => {
         price: String(productInstance.price) || "",
         category: productInstance.category || "",
         description: productInstance.description || "",
-        location: productInstance.location || { lat: null, lng: null },
+        location: productInstance.location || null,
         images: Array.isArray(productInstance.images)
           ? [...productInstance.images]
           : [],
       };
       setFormData(initialFormData);
-      // console.log("Initial formData set:", initialFormData);
     } else if (!loading && !error) {
       dispatch(productsThunks.fetchItems())
         .unwrap()
@@ -187,13 +75,12 @@ const ProductAccountEdit = () => {
               price: String(productInstance.price) || "",
               category: productInstance.category || "",
               description: productInstance.description || "",
-              location: productInstance.location || { lat: null, lng: null },
+              location: productInstance.location || null,
               images: Array.isArray(productInstance.images)
                 ? [...productInstance.images]
                 : [],
             };
             setFormData(initialFormData);
-            // console.log("Initial formData set after fetch:", initialFormData);
           }
         })
         .catch((err) => console.error("Failed to fetch products:", err));
@@ -206,26 +93,25 @@ const ProductAccountEdit = () => {
       const numValue = parseFloat(value);
       if (value === "" || (numValue > 0 && !isNaN(numValue))) {
         setFormData((prev) => ({ ...prev, [name]: value }));
-        setPriceError(null); // Clear error if valid
+        setPriceError(null);
       } else {
         setPriceError("Price must be a positive number greater than 0");
       }
     } else {
-      setFormData((prev) => {
-        const newFormData = { ...prev, [name]: value };
-        // console.log(`Form field ${name} updated to:`, value);
-        return newFormData;
-      });
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleLocationSelect = (lat, lng) => {
-    setFormData((prev) => {
-      const newFormData = { ...prev, location: { lat, lng } };
-      // console.log("Location updated to:", { lat, lng });
-      setShowMapModal(false);
-      return newFormData;
-    });
+  const handleLocationSelect = (location) => {
+    setFormData((prev) => ({
+      ...prev,
+      location: {
+        lat: location.lat,
+        lng: location.lng,
+        city: location.city || "Selected Location",
+      },
+    }));
+    setShowMapModal(false);
   };
 
   const handleImageChange = async (e) => {
@@ -235,43 +121,31 @@ const ProductAccountEdit = () => {
         const uploadedImageUrls = await Promise.all(
           files.map(async (file) => {
             const url = await uploadImage(file);
-            // console.log("Uploaded image URL:", url);
             return url;
           })
         );
-        setFormData((prev) => {
-          const newImages = [
-            ...prev.images,
-            ...uploadedImageUrls.filter(Boolean),
-          ];
-          // console.log("Updated formData.images:", newImages);
-          return { ...prev, images: newImages };
-        });
+        setFormData((prev) => ({
+          ...prev,
+          images: [...prev.images, ...uploadedImageUrls.filter(Boolean)],
+        }));
         setUploadError(null);
       } catch (error) {
         setUploadError(`Image upload failed: ${error.message}`);
-        console.error("Image upload error:", error);
       }
     }
   };
 
   const removeImage = (indexToRemove) => {
-    setFormData((prev) => {
-      const newImages = prev.images.filter(
-        (_, index) => index !== indexToRemove
-      );
-      // console.log("Images after removal:", newImages);
-      return { ...prev, images: newImages };
-    });
+    setFormData((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, index) => index !== indexToRemove),
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (uploadLoading) {
-      console.log("Image upload in progress ...");
-      return;
-    }
+    if (uploadLoading) return;
 
     const priceValue = parseFloat(formData.price);
     if (!priceValue || priceValue <= 0) {
@@ -293,19 +167,29 @@ const ProductAccountEdit = () => {
       updatedAt: new Date(),
     };
 
-    // console.log("Data being sent to updateItem:", updatedData);
-
     try {
       await dispatch(
         productsThunks.updateItem({ id: product.id, data: updatedData })
       ).unwrap();
-      // console.log("Update result:", result);
       setIsEditing(false);
       setProduct(Product.fromFirestore(updatedData));
-      alert("Product updated successfully!");
+      setPopupConfig({
+        title: "Success",
+        message: "Product item updated successfully!",
+        onConfirm: () => setShowPopup(false),
+        confirmText: "OK",
+      });
+      setShowPopup(true);
     } catch (err) {
-      console.error("Failed to update product:", err);
-      alert("Failed to update product. Please try again.");
+      console.error("Failed to update product item:", err);
+      // Show error popup
+      setPopupConfig({
+        title: "Error",
+        message: "Failed to update product item. Please try again.",
+        onConfirm: () => setShowPopup(false),
+        confirmText: "OK",
+      });
+      setShowPopup(true);
     }
   };
 
@@ -332,7 +216,7 @@ const ProductAccountEdit = () => {
   }
 
   return (
-    <div className="w-full flex flex-col bg-gray-100 min-h-screen">
+    <div className="w-full flex flex-col bg-gray-100 min-h-screen mt-24">
       <div className="w-full sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto p-6 md:p-8 flex-1">
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <button
@@ -415,7 +299,7 @@ const ProductAccountEdit = () => {
                       priceError ? "border-red-500" : ""
                     }`}
                     placeholder="Enter price in DT"
-                    min="1" // Ensures positive value
+                    min="1"
                     step="1"
                     required
                     disabled={uploadLoading}
@@ -451,16 +335,12 @@ const ProductAccountEdit = () => {
                   className="mt-1 w-full bg-blue-100 text-blue-700 p-2 rounded-md hover:bg-blue-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={uploadLoading}
                 >
-                  {formData.location.lat && formData.location.lng
-                    ? `Lat: ${formData.location.lat.toFixed(
-                        4
-                      )}, Lng: ${formData.location.lng.toFixed(4)}`
-                    : "Edit Location"}
+                  {formData.location?.city || "Select Location"}
                 </button>
                 {showMapModal && (
                   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-4 rounded-lg w-11/12 max-w-2xl">
-                      <TunisiaMap
+                      <LocationPicker
                         initialLocation={formData.location}
                         onSelect={handleLocationSelect}
                         onClose={() => setShowMapModal(false)}
@@ -500,11 +380,7 @@ const ProductAccountEdit = () => {
                     formData.images.map((img, index) => (
                       <div key={index} className="relative">
                         <img
-                          src={
-                            typeof img === "string"
-                              ? img
-                              : URL.createObjectURL(img)
-                          }
+                          src={img}
                           alt={`Preview ${index}`}
                           className="w-24 h-24 object-cover rounded-md"
                         />
@@ -574,22 +450,19 @@ const ProductAccountEdit = () => {
                 <h3 className="text-lg font-semibold text-gray-800">
                   Location
                 </h3>
-                <button
-                  type="button"
-                  onClick={() => setShowLocationPopup(true)}
-                  className="mt-1 w-full bg-gray-100 text-gray-700 p-2 rounded-md hover:bg-gray-200 transition"
-                >
-                  {product.location.lat && product.location.lng
-                    ? `Lat: ${product.location.lat.toFixed(
-                        4
-                      )}, Lng: ${product.location.lng.toFixed(4)}`
-                    : "View Location"}
-                </button>
+                <div className="mt-1 w-full bg-gray-100 text-gray-700 p-2 rounded-md hover:bg-gray-200 transition">
+                  {product.location?.city || "View Location"}
+                </div>
                 {showLocationPopup && (
-                  <LocationMapPopup
-                    location={product.location}
-                    onClose={() => setShowLocationPopup(false)}
-                  />
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-4 rounded-lg w-11/12 max-w-2xl">
+                      <LocationPicker
+                        initialLocation={product.location}
+                        readOnly={true}
+                        onClose={() => setShowLocationPopup(false)}
+                      />
+                    </div>
+                  </div>
                 )}
               </div>
               <div>
@@ -622,6 +495,16 @@ const ProductAccountEdit = () => {
           )}
         </div>
       </div>
+      {/* Custom Popup */}
+      <CustomPopup
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        title={popupConfig.title}
+        message={popupConfig.message}
+        onConfirm={popupConfig.onConfirm}
+        confirmText={popupConfig.confirmText}
+        cancelText={popupConfig.cancelText}
+      />
     </div>
   );
 };
