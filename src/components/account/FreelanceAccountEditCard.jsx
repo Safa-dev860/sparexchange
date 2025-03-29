@@ -210,7 +210,7 @@ const FreelanceAccountEdit = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
       </div>
     );
   }
@@ -229,7 +229,7 @@ const FreelanceAccountEdit = () => {
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <button
             onClick={toggleEdit}
-            className="absolute top-4 right-4 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="absolute top-4 right-4 bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500"
             disabled={uploadLoading}
           >
             {isEditing ? (
@@ -274,7 +274,7 @@ const FreelanceAccountEdit = () => {
                 </p>
               )}
               {uploadLoading && (
-                <p className="text-blue-600 text-sm">Uploading images...</p>
+                <p className="text-green-600 text-sm">Uploading images...</p>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -286,7 +286,7 @@ const FreelanceAccountEdit = () => {
                     name="gigTitle"
                     value={formData.gigTitle}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                     placeholder="Enter gig title"
                     required
                     disabled={uploadLoading}
@@ -300,7 +300,7 @@ const FreelanceAccountEdit = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                     disabled={uploadLoading}
                   >
                     <option value="">Select a category</option>
@@ -320,7 +320,7 @@ const FreelanceAccountEdit = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                   rows="4"
                   placeholder="Describe your gig"
                   disabled={uploadLoading}
@@ -333,7 +333,7 @@ const FreelanceAccountEdit = () => {
                 <input
                   type="text"
                   onKeyDown={handleTechnologiesChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                   placeholder="Type a technology and press Enter"
                   disabled={uploadLoading}
                 />
@@ -341,7 +341,7 @@ const FreelanceAccountEdit = () => {
                   {formData.technologies.map((tech, index) => (
                     <div
                       key={index}
-                      className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md flex items-center"
+                      className="bg-green-100 text-green-700 px-2 py-1 rounded-md flex items-center"
                     >
                       {tech}
                       <button
@@ -377,7 +377,7 @@ const FreelanceAccountEdit = () => {
                   type="file"
                   multiple
                   onChange={handleImageChange}
-                  className="mt-1 block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  className="mt-1 block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                   disabled={uploadLoading}
                 />
                 <div className="mt-4 flex flex-wrap gap-4">
@@ -435,7 +435,7 @@ const FreelanceAccountEdit = () => {
                       onChange={(e) =>
                         handlePackageChange(index, "title", e.target.value)
                       }
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                       placeholder="Package Title"
                       disabled={uploadLoading}
                     />
@@ -448,7 +448,7 @@ const FreelanceAccountEdit = () => {
                           e.target.value
                         )
                       }
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                       placeholder="Package Description"
                       disabled={uploadLoading}
                     />
@@ -462,7 +462,7 @@ const FreelanceAccountEdit = () => {
                           parseFloat(e.target.value)
                         )
                       }
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                       placeholder="Price"
                       min="0"
                       disabled={uploadLoading}
@@ -477,7 +477,7 @@ const FreelanceAccountEdit = () => {
                           parseInt(e.target.value)
                         )
                       }
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                       placeholder="Revisions"
                       min="0"
                       disabled={uploadLoading}
@@ -492,7 +492,7 @@ const FreelanceAccountEdit = () => {
                           parseInt(e.target.value)
                         )
                       }
-                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                      className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                       placeholder="Delivery Time (days)"
                       min="1"
                       disabled={uploadLoading}
@@ -511,7 +511,7 @@ const FreelanceAccountEdit = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
                   disabled={uploadLoading}
                 >
                   Save Changes
@@ -546,7 +546,7 @@ const FreelanceAccountEdit = () => {
                     gig.technologies.map((tech, index) => (
                       <span
                         key={index}
-                        className="bg-blue-100 text-blue-700 px-2 py-1 rounded-md"
+                        className="bg-green-100 text-green-700 px-2 py-1 rounded-md"
                       >
                         {tech}
                       </span>

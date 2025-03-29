@@ -1,311 +1,274 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import {
-  fetchConversations,
+  startNewConversation,
+  fetchOneConversation,
   sendMessage,
 } from "../../redux/slices/conversationSlice";
+import ConversationView from "./ConversationView";
 import {
-  getDatabase,
-  ref,
-  onValue,
-  off,
-  push,
-  set,
-  get,
-} from "firebase/database";
-import { useNavigate } from "react-router-dom";
-import CustomPopup from "../CustomPopup"; // Import the CustomPopup component
+  getFirestore,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { getDatabase, ref, onValue } from "firebase/database";
 
-const getConversationId = (userId, productId) => `${userId}_${productId}`;
-
-const ExchangeInfoWidget = ({ exchange, onToggleFavorite, onSendRequest }) => {
+const ExchangeInfoWidget = ({ exchange }) => {
   const dispatch = useDispatch();
-  const { conversations, status, error } = useSelector(
-    (state) => state.conversation
-  );
-  const [newMessage, setNewMessage] = useState("");
-  const [isConversationVisible, setIsConversationVisible] = useState(false);
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const navigate = useNavigate(); // Get the navigate function
+  const { conversations, status } = useSelector((state) => state.conversation);
+  const [newMessage, setNewMessage] = useState("");
+  const [existingConversationId, setExistingConversationId] = useState(null);
+  const [isLoadingConversation, setIsLoadingConversation] = useState(true);
+  const messagesContainerRef = useRef(null);
+  // Check if current user is the product owner
+  const isOwner = user?.uid === exchange?.owner?.id;
 
-  // State for the custom popup
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const [popupMessage, setPopupMessage] = useState("");
-
+  // Check for existing conversation
   useEffect(() => {
-    if (exchange.id && user.uid) {
-      const conversationId = getConversationId(user.uid, exchange.id);
-      const conversationRef = ref(
-        getDatabase(),
-        `products/${exchange.id}/conversations/${conversationId}`
+    const checkExistingConversation = async () => {
+      if (!user?.uid || !exchange?.id || isOwner) {
+        setIsLoadingConversation(false);
+        return;
+      }
+
+      const firestore = getFirestore();
+      const q = query(
+        collection(firestore, "Conversations"),
+        where("productId", "==", exchange.id),
+        where("participants", "array-contains", user.uid)
       );
 
-      const listener = (snapshot) => {
-        const conversationData = snapshot.val();
-        if (conversationData) {
+      try {
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+          const doc = querySnapshot.docs[0];
+          const conversationId = doc.id;
+          setExistingConversationId(conversationId);
           dispatch(
-            fetchConversations({
+            fetchOneConversation({
               productId: exchange.id,
-              conversations: { [conversationId]: conversationData },
+              conversationId,
             })
           );
-          setIsConversationVisible(true);
-        } else {
-          // console.log(
-          //   "No conversation data found for conversationId:",
-          //   conversationId
-          // );
         }
-      };
+      } catch (error) {
+        console.error("Error checking for existing conversation:", error);
+      } finally {
+        setIsLoadingConversation(false);
+      }
+    };
 
-      onValue(conversationRef, listener);
+    checkExistingConversation();
+  }, [dispatch, exchange.id, user?.uid, isOwner]);
 
-      // Cleanup function to remove the listener
-      return () => off(conversationRef, "value", listener);
+  // Set up real-time listener for conversation updates
+  useEffect(() => {
+    if (!existingConversationId || !exchange?.id) return;
+
+    const db = getDatabase();
+    const conversationRef = ref(
+      db,
+      `products/${exchange.id}/conversations/${existingConversationId}`
+    );
+
+    const unsubscribe = onValue(conversationRef, (snapshot) => {
+      if (snapshot.exists()) {
+        dispatch(
+          fetchOneConversation({
+            productId: exchange.id,
+            conversationId: existingConversationId,
+            conversationData: snapshot.val(),
+          })
+        );
+      }
+    });
+
+    return () => unsubscribe();
+  }, [existingConversationId, exchange?.id, dispatch]);
+
+  // Scroll to bottom when messages update
+  useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
     }
-  }, [dispatch, exchange.id, user.uid]);
+  }, [conversations, existingConversationId]);
 
-  const handleSendMessage = (e) => {
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (newMessage.trim()) {
-      const conversationId = getConversationId(user.uid, exchange.id);
+    if (!newMessage.trim() || isOwner) return;
 
+    if (existingConversationId) {
       dispatch(
         sendMessage({
           productId: exchange.id,
-          conversationId,
+          conversationId: existingConversationId,
           senderId: user.uid,
-          receiverId: exchange.owner.id,
           message: newMessage,
+          clientId: exchange.owner.id,
+          buyerId: user.uid,
         })
       );
-
-      setNewMessage("");
+    } else {
+      dispatch(
+        startNewConversation({
+          productId: exchange.id,
+          client: {
+            username: exchange.owner.name,
+            id: exchange.owner.id,
+            profileUrl: exchange.owner.imageUrl,
+          },
+          buyer: {
+            username: user.name,
+            id: user.uid,
+            profileUrl: user.profilePicture,
+          },
+          initialMessage: newMessage,
+        })
+      )
+        .unwrap()
+        .then((result) => {
+          setExistingConversationId(result.conversationId);
+        });
     }
+
+    setNewMessage("");
   };
 
-  const onClick = () => {
+  const handleEditProduct = () => {
     navigate(`/exchanges/${exchange.id}/edit`);
   };
 
-  // Function to handle confirmation (if needed)
-  const handleConfirm = () => {
-    // Perform any action on confirmation
-    console.log("Confirmed!");
-    setIsPopupOpen(false); // Close the popup
-  };
+  if (isLoadingConversation) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
+        <p className="ml-4 text-gray-600">Loading...</p>
+      </div>
+    );
+  }
+
+  const currentConversation = existingConversationId
+    ? conversations[existingConversationId]
+    : null;
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-4 sm:p-6 flex flex-col w-full max-w-4xl mx-auto">
-      {isConversationVisible ? (
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Left Side: Images and Details */}
-          <div className="w-full md:w-1/3 flex flex-col space-y-4">
-            {/* Images */}
-            <div className="w-full">
-              {exchange.images.length > 0 ? (
-                <div className="flex flex-col space-y-4 overflow-y-auto max-h-64 md:max-h-[calc(100vh-10rem)]">
-                  {exchange.images.map((image, index) => (
-                    <img
-                      key={index}
-                      src={image}
-                      alt={exchange.itemOffered}
-                      className="w-full h-48 object-cover rounded-md"
-                    />
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-500">No images available.</p>
-              )}
-            </div>
-            {/* Details */}
-            <div>
-              <h1 className="text-xl font-bold text-gray-800 mb-2">
-                {exchange.itemOffered}
-              </h1>
-              <p className="text-lg text-gray-600 mb-4">
-                Wants: {exchange.itemWanted}
-              </p>
-              <p className="text-gray-600 mb-4">{exchange.description}</p>
-              <p className="text-sm text-gray-500 mb-2">
-                <span className="font-semibold">Condition:</span>{" "}
-                {exchange.condition}
-              </p>
-              <p className="text-sm text-gray-500 mb-2">
-                <span className="font-semibold">Location:</span>{" "}
-                {typeof exchange.location === "object"
-                  ? exchange.location.city
-                  : exchange.location}
-              </p>
-              <p className="text-sm text-gray-500 mb-2">
-                <span className="font-semibold">Owner:</span>{" "}
-                {exchange.owner.name} ({exchange.owner.email})
-              </p>
-              <p className="text-sm text-gray-500 mb-2">
-                <span className="font-semibold">Status:</span> {exchange.status}
-              </p>
-              <p className="text-sm text-gray-500 mb-4">
-                <span className="font-semibold">Created:</span>
-                {exchange.createdAt.toLocaleDateString()}
-              </p>
-              {user.uid !== exchange.owner.id && (
-                <button
-                  onClick={onToggleFavorite}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition text-2xl"
-                  aria-label="Toggle Favorite"
-                >
-                  ❤️
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Right Side: Conversation */}
-          <div className="w-full md:w-2/3 flex flex-col space-y-4">
-            <h2 className="text-lg font-bold text-gray-800">Conversation</h2>
-            <div className="bg-gray-100 p-4 rounded-lg overflow-y-auto max-h-80">
-              {Object.values(conversations).map((conversation, index) => (
-                <div key={index}>
-                  {Array.isArray(conversation.messages) &&
-                    conversation.messages.map((message, msgIndex) => (
-                      <div
-                        key={msgIndex}
-                        className={`mb-4 flex ${
-                          message.sender === user.uid
-                            ? "justify-end"
-                            : "justify-start"
-                        }`}
-                      >
-                        <div
-                          className={`px-4 py-2 rounded-lg ${
-                            message.sender === user.uid
-                              ? "bg-blue-600 text-white"
-                              : "bg-gray-200 text-gray-800"
-                          }`}
-                        >
-                          {message.content}
-                        </div>
-                      </div>
-                    ))}
-                </div>
-              ))}
-              {Object.values(conversations).length === 0 && (
-                <p className="text-gray-500">No messages yet.</p>
-              )}
-            </div>
-            <form onSubmit={handleSendMessage} className="flex gap-2">
-              <input
-                type="text"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                className="flex-1 p-2 border border-gray-300 rounded-md"
-                placeholder="Type a message"
+      <div className="flex flex-col md:flex-row gap-4">
+        {/* Left Side: Product Details */}
+        <div className="w-full md:w-1/3">
+          <div className="mb-4">
+            {exchange.images?.length > 0 && (
+              <img
+                src={exchange.images[0]}
+                alt={exchange.itemOffered}
+                className="w-full h-48 object-cover rounded-md"
               />
-              <button
-                type="submit"
-                className="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition"
-              >
-                Send
-              </button>
-            </form>
-          </div>
-        </div>
-      ) : (
-        <div className="flex flex-col md:flex-row gap-4">
-          {/* Left Side: Images */}
-          <div className="w-full md:w-1/3">
-            {exchange.images.length > 0 ? (
-              <div className="flex flex-col space-y-4 overflow-y-auto max-h-64">
-                {exchange.images.map((image, index) => (
-                  <img
-                    key={index}
-                    src={image}
-                    alt={exchange.itemOffered}
-                    className="w-full h-48 object-cover rounded-md"
-                  />
-                ))}
-              </div>
-            ) : (
-              <p className="text-gray-500">No images available.</p>
             )}
           </div>
 
-          {/* Right Side: Details and Send Request */}
-          <div className="w-full md:w-2/3 flex flex-col space-y-4">
-            <h1 className="text-xl font-bold text-gray-800">
+          <div>
+            <h1 className="text-xl font-bold text-gray-800 mb-2">
               {exchange.itemOffered}
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-gray-600 mb-4">
               Wants: {exchange.itemWanted}
             </p>
-            <p className="text-gray-600">{exchange.description}</p>
+            <p className="text-gray-600 mb-4">{exchange.description}</p>
             <p className="text-sm text-gray-500 mb-2">
               <span className="font-semibold">Condition:</span>{" "}
               {exchange.condition}
             </p>
             <p className="text-sm text-gray-500 mb-2">
               <span className="font-semibold">Location:</span>{" "}
-              {typeof exchange.location === "object"
-                ? exchange.location.city
-                : exchange.location}
+              {exchange.location?.city || exchange.location}
             </p>
             <p className="text-sm text-gray-500 mb-2">
               <span className="font-semibold">Owner:</span>{" "}
-              {exchange.owner.name} ({exchange.owner.email})
+              {exchange.owner?.name} ({exchange.owner?.email})
             </p>
             <p className="text-sm text-gray-500 mb-2">
               <span className="font-semibold">Status:</span> {exchange.status}
             </p>
             <p className="text-sm text-gray-500 mb-4">
-              <span className="font-semibold">Created:</span>
-              {exchange.createdAt.toLocaleDateString()}
+              <span className="font-semibold">Created:</span>{" "}
+              {new Date(exchange.createdAt).toLocaleDateString()}
             </p>
-            {user.uid !== exchange.owner.id ? (
-              <>
-                <button
-                  onClick={onToggleFavorite}
-                  className="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition text-2xl"
-                  aria-label="Toggle Favorite"
-                >
-                  ❤️
-                </button>
-                <form onSubmit={handleSendMessage} className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newMessage}
-                    onChange={(e) => setNewMessage(e.target.value)}
-                    className="flex-1 p-2 border border-gray-300 rounded-md"
-                    placeholder="Type your first message"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-green-600 text-white p-2 rounded-md hover:bg-green-700 transition"
-                  >
-                    Send Request
-                  </button>
-                </form>
-              </>
-            ) : (
-              <button
-                onClick={onClick}
-                className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition"
-              >
-                Visit Your Product
-              </button>
-            )}
           </div>
         </div>
-      )}
 
-      {/* Custom Popup */}
-      <CustomPopup
-        isOpen={isPopupOpen}
-        onClose={() => setIsPopupOpen(false)}
-        title="Notification"
-        message={popupMessage}
-        onConfirm={handleConfirm}
-        confirmText="OK"
-      />
+        {/* Right Side: Conversation (only for non-owners) */}
+        {!isOwner ? (
+          <div className="w-full md:w-2/3 flex flex-col border rounded-lg h-[70vh]">
+            <div className="border-b p-4 flex flex-row items-center gap-2 sticky top-0 bg-white z-10">
+              <img
+                src={exchange?.owner?.imageUrl}
+                alt="Client"
+                className="w-10 h-10 rounded-full object-cover"
+              />
+              <h1>{exchange?.owner?.name}</h1>
+            </div>
+
+            <div
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto p-4"
+            >
+              <ConversationView
+                conversation={currentConversation}
+                currentUserId={user?.uid}
+                status={status}
+              />
+            </div>
+
+            <form
+              onSubmit={handleSendMessage}
+              className="border-t p-4 sticky bottom-0 bg-white"
+            >
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  className="flex-1 p-2 border rounded-md"
+                  placeholder={
+                    currentConversation
+                      ? "Type your message..."
+                      : "Type your first message..."
+                  }
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                  disabled={!newMessage.trim()}
+                >
+                  {currentConversation ? "Send" : "Start Chat"}
+                </button>
+              </div>
+            </form>
+          </div>
+        ) : (
+          <div className="w-full md:w-2/3 flex items-center justify-center">
+            <div className="text-center p-8">
+              <h3 className="text-lg font-medium mb-2">This is your product</h3>
+              <p className="text-gray-600 mb-4">
+                You can edit the product details or wait for others to contact
+                you.
+              </p>
+              <button
+                onClick={handleEditProduct}
+                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+              >
+                Edit Product Details
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

@@ -41,6 +41,12 @@ const ProductInfoWidget = ({
         <p className="text-sm text-gray-500 mb-2">
           <span className="font-semibold">Category:</span> {product.category}
         </p>
+        <p className="text-sm text-gray-500 mb-2">
+          <span className="font-semibold">Location:</span>{" "}
+          {typeof product.location === "object"
+            ? product.location.city
+            : product.location}
+        </p>
         <p className="text-sm text-gray-500 mb-4">
           <span className="font-semibold">Owner:</span> {product.owner.name} (
           {product.owner.email})

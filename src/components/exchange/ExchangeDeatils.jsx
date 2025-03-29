@@ -31,27 +31,18 @@ const ExchangeDetails = () => {
           if (refreshedExchange) {
             setExchange(Exchange.fromFirestore(refreshedExchange));
           } else {
-            console.log(`Exchange with id ${id} not found after fetch`);
+            // console.log(`Exchange with id ${id} not found after fetch`);
           }
         })
         .catch((err) => console.error("Failed to fetch exchanges:", err));
     }
   }, [id, exchangeItems, dispatch, loading, error]);
 
-  const handleToggleFavorite = () => {
-    alert(`${exchange?.itemOffered} toggled in favorites!`);
-    // dispatch(toggleFavorite(exchange.id));
-  };
-
-  const handleSendRequest = () => {
-    alert(`Request sent for ${exchange?.itemOffered}!`);
-    // dispatch(sendRequest(exchange.id));
-  };
-
   if (loading) {
     return (
-      <div className="flex flex-col min-h-screen bg-gray-50 justify-center items-center">
-        <p className="text-center text-gray-600 text-lg">Loading...</p>
+      <div className="max-w-7xl mx-auto p-6 flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
+        <p className="ml-4 text-gray-600">Loading...</p>
       </div>
     );
   }
@@ -79,11 +70,7 @@ const ExchangeDetails = () => {
   return (
     <div className="w-full flex flex-col bg-gray-50 mt-24">
       <div className="w-full sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto p-4 sm:p-6 md:p-8 flex-1">
-        <ExchangeInfoWidget
-          exchange={exchange}
-          onToggleFavorite={handleToggleFavorite}
-          onSendRequest={handleSendRequest}
-        />
+        <ExchangeInfoWidget exchange={exchange} />
       </div>
     </div>
   );

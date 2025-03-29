@@ -1,6 +1,6 @@
 // components/ProductAccountEdit.js
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { productsThunks } from "../../redux/slices/categorySlice";
 import { Product } from "../../models/ProductModel";
@@ -11,7 +11,7 @@ import CustomPopup from "../CustomPopup";
 const ProductAccountEdit = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const productItems = useSelector((state) => state.products.items) || [];
   const loading = useSelector((state) => state.products.loading) || false;
@@ -202,7 +202,7 @@ const ProductAccountEdit = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500"></div>
       </div>
     );
   }
@@ -221,7 +221,7 @@ const ProductAccountEdit = () => {
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <button
             onClick={toggleEdit}
-            className="absolute top-4 right-4 bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="absolute top-4 right-4 bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition focus:outline-none focus:ring-2 focus:ring-green-500"
             disabled={uploadLoading}
           >
             {isEditing ? (
@@ -268,7 +268,7 @@ const ProductAccountEdit = () => {
                 </p>
               )}
               {uploadLoading && (
-                <p className="text-blue-600 text-sm">Uploading images...</p>
+                <p className="text-green-600 text-sm">Uploading images...</p>
               )}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
@@ -280,7 +280,7 @@ const ProductAccountEdit = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                     placeholder="Enter product name"
                     required
                     disabled={uploadLoading}
@@ -295,7 +295,7 @@ const ProductAccountEdit = () => {
                     name="price"
                     value={formData.price}
                     onChange={handleInputChange}
-                    className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 ${
+                    className={`mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2 ${
                       priceError ? "border-red-500" : ""
                     }`}
                     placeholder="Enter price in DT"
@@ -313,7 +313,7 @@ const ProductAccountEdit = () => {
                     name="category"
                     value={formData.category}
                     onChange={handleInputChange}
-                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                     disabled={uploadLoading}
                   >
                     <option value="">Select a category</option>
@@ -332,7 +332,7 @@ const ProductAccountEdit = () => {
                 <button
                   type="button"
                   onClick={() => setShowMapModal(true)}
-                  className="mt-1 w-full bg-blue-100 text-blue-700 p-2 rounded-md hover:bg-blue-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="mt-1 w-full bg-green-100 text-green-700 p-2 rounded-md hover:bg-green-200 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   disabled={uploadLoading}
                 >
                   {formData.location?.city || "Select Location"}
@@ -357,7 +357,7 @@ const ProductAccountEdit = () => {
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500 p-2"
                   rows="4"
                   placeholder="Describe your product"
                   disabled={uploadLoading}
@@ -371,7 +371,7 @@ const ProductAccountEdit = () => {
                   type="file"
                   multiple
                   onChange={handleImageChange}
-                  className="mt-1 block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                  className="mt-1 block w-full text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
                   disabled={uploadLoading}
                 />
                 <div className="mt-4 flex flex-wrap gap-4">
@@ -424,7 +424,7 @@ const ProductAccountEdit = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+                  className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition"
                   disabled={uploadLoading || priceError}
                 >
                   Save Changes

@@ -166,6 +166,7 @@ const createCategorySlice = (categoryName) => {
     reducers: {},
     extraReducers: (builder) => {
       builder
+        // fetch all items
         .addCase(thunks.fetchItems.pending, (state) => {
           state.loading = true;
           state.error = null;
@@ -178,6 +179,7 @@ const createCategorySlice = (categoryName) => {
           state.loading = false;
           state.error = action.error.message;
         })
+        // fetch items by ID
         .addCase(thunks.fetchItemsById.pending, (state) => {
           state.loading = true;
           state.error = null;
@@ -190,28 +192,49 @@ const createCategorySlice = (categoryName) => {
           state.loading = false;
           state.error = action.error.message;
         })
+        // add item
+        .addCase(thunks.addItem.pending, (state) => {
+          state.error = null;
+          state.loading = true;
+        })
         .addCase(thunks.addItem.fulfilled, (state, action) => {
           state.items.push(action.payload);
+          state.loading = false;
         })
         .addCase(thunks.addItem.rejected, (state, action) => {
           state.error = action.payload;
+          state.loading = false;
+        })
+        // update item
+        .addCase(thunks.updateItem.pending, (state) => {
+          state.error = null;
+          state.loading = true;
         })
         .addCase(thunks.updateItem.fulfilled, (state, action) => {
           const index = state.items.findIndex(
             (item) => item.id === action.payload.id
           );
           if (index !== -1) state.items[index] = action.payload;
+          state.loading = false;
         })
         .addCase(thunks.updateItem.rejected, (state, action) => {
           state.error = action.error.message;
+          state.loading = false;
+        })
+        // delete item
+        .addCase(thunks.deleteItem.pending, (state) => {
+          state.error = null;
+          state.loading = true;
         })
         .addCase(thunks.deleteItem.fulfilled, (state, action) => {
           state.items = state.items.filter(
             (item) => item.id !== action.payload
           );
+          state.loading = false;
         })
         .addCase(thunks.deleteItem.rejected, (state, action) => {
           state.error = action.error.message;
+          state.loading = false;
         });
     },
   });

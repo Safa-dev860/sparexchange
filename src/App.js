@@ -32,6 +32,7 @@ import ExchangeAccountEdit from "./components/account/ExchangeAccountEditCard";
 import TransportAccountEditCard from "./components/account/TransportAccountEditCard";
 import Notification from "./pages/Notification";
 import Settings from "./pages/Settings";
+import ConversationsPage from "./components/account/ExchangeAccountConversationPage";
 
 const App = () => {
   const [isAdmin] = useState(false);
@@ -82,6 +83,10 @@ const App = () => {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/notifications" element={<Notification />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route
+                  path="/exchanges/:id/conversations"
+                  element={<ConversationsPage />}
+                />
               </Route>
             </Routes>
             <Footer />

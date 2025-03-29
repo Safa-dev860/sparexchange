@@ -8,7 +8,7 @@ const ProfileSection = ({ user }) => {
       <img
         src={user.profilePicture}
         alt="Profile"
-        className="w-32 h-32 rounded-full mb-6 mx-auto border-4 border-purple-200 hover:border-purple-400 transition-all"
+        className="w-32 h-32 rounded-full mb-6 mx-auto border-4 border-green-700 hover:border-green-700 transition-all"
       />
 
       {/* User Name */}
@@ -17,8 +17,8 @@ const ProfileSection = ({ user }) => {
       </h2>
 
       {/* User Balance */}
-      <div className="bg-purple-50 p-3 rounded-lg text-center mb-4">
-        <span className="text-lg font-semibold text-purple-800">
+      <div className="bg-green-50 p-3 rounded-lg text-center mb-4">
+        <span className="text-lg font-semibold text-green-800">
           Balance: {user.balance} DT
         </span>
       </div>
