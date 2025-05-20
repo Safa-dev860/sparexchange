@@ -122,7 +122,7 @@ const ShoppingCart = () => {
                         </p>
 
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center border rounded-md">
+                          {/* <div className="flex items-center border rounded-md">
                             <button
                               onClick={() =>
                                 handleQuantityChange(item.id, item.quantity - 1)
@@ -139,10 +139,10 @@ const ShoppingCart = () => {
                               className="px-3 py-1 text-gray-600 hover:bg-gray-100"
                             >
                               +
-                            </button>
-                          </div>
+                            </button> 
+                          </div> */}
                           <p className="font-medium">
-                            ${(item.price * item.quantity).toFixed(2)}
+                            {(item.price * item.quantity).toFixed(2)} DT
                           </p>
                         </div>
                       </div>
@@ -154,7 +154,7 @@ const ShoppingCart = () => {
                   <div className="flex justify-between mb-4">
                     <span className="font-medium">Subtotal</span>
                     <span className="font-medium">
-                      ${totalAmount.toFixed(2)}
+                      {totalAmount.toFixed(2)} DT
                     </span>
                   </div>
                   <button

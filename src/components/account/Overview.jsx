@@ -14,9 +14,9 @@ const Overview = ({
         <div className="bg-white-100 rounded-lg p-6 shadow-lg">
           <div className="flex items-center justify-between">
             <h2 className="text-lg font-semibold">Total Revenue</h2>
-            <span className="text-gray-600 text-sm">$</span>
+            <span className="text-gray-600 text-sm">DT</span>
           </div>
-          <p className="text-2xl font-bold mt-2">${totalRevenue}</p>
+          <p className="text-2xl font-bold mt-2">{totalRevenue} DT</p>
           <p className="text-green-500 text-sm">+20% from last month</p>
         </div>
 
@@ -63,7 +63,7 @@ const Overview = ({
                   className="bg-blue-500/50 w-8 mx-auto rounded-t"
                   style={{ height: `${(data.revenue / 6000) * 200}px` }} // Scale height relative to max revenue
                 ></div>
-                <p className="text-xs mt-2">${data.revenue}</p>
+                <p className="text-xs mt-2">{data.revenue} dt</p>
                 <p className="text-xs text-gray-600">{data.month}</p>
               </div>
             ))}
@@ -86,7 +86,7 @@ const Overview = ({
                   <p className="text-gray-600 text-sm">{sale.email}</p>
                 </div>
               </div>
-              <p className="text-green-500">+${sale.amount.toFixed(2)}</p>
+              <p className="text-green-500">+{sale.amount.toFixed(2)} DT</p>
             </div>
           ))}
         </div>

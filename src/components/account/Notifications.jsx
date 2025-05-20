@@ -1,5 +1,3 @@
-import React from "react";
-
 const Notifications = ({ notificationsData }) => {
   return (
     <div className="bg-blue-100 rounded-lg p-6 shadow-lg">

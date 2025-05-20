@@ -1,35 +1,71 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import useCurrentUser from "../hooks/useCurrentUser";
+import { useRecommendations } from "../hooks/endpoints";
 
 const Notification = () => {
+  const { user, loading: loadingUser } = useCurrentUser();
+  const { getRecommendations, loading: loadingRecommendations } =
+    useRecommendations();
+
+  const [recommendedProducts, setRecommendedProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchRecommendations = async () => {
+      if (!loadingUser && user) {
+        const res = await getRecommendations(user.id);
+        const recommendations = res.data.recommendations || [];
+        const allProducts = res.data.products || [];
+
+        // Extract recommendation IDs
+        const recommendedIds = recommendations.map((rec) => rec.id);
+
+        // Filter the actual product details
+        const matchedProducts = allProducts.filter((prod) =>
+          recommendedIds.includes(prod.id)
+        );
+
+        setRecommendedProducts(matchedProducts);
+      }
+    };
+
+    fetchRecommendations();
+  }, [getRecommendations, user, loadingUser]);
+
+  if (loadingRecommendations) return <div>Loading recommendations...</div>;
+
   return (
-    <div className=" mt-24 mb-24">
-      <div className="notification-container">
-        <div className="notification-list">
-          <div className="flex items-center justify-center p-6 bg-white rounded-lg shadow-md">
-            <div className="text-center">
-              <svg
-                className="w-16 h-16 mx-auto text-gray-400"
-                fill="none"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0"
-                />
-              </svg>
-              <h3 className="mt-4 text-lg font-semibold text-gray-700">
-                Coming Soon!
+    <div className="mt-24 mb-24 px-4">
+      <h2 className="text-2xl font-bold mb-6 text-center">
+        Recommended for you
+      </h2>
+      {recommendedProducts.length === 0 ? (
+        <p className="text-center text-gray-500">
+          No recommendations available.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+          {recommendedProducts.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white p-4 rounded-lg shadow hover:shadow-md transition"
+            >
+              <img
+                src={item.images?.[0]}
+                alt={item.name}
+                className="w-full h-48 object-cover rounded-md mb-4"
+              />
+              <h3 className="text-xl font-semibold text-gray-800">
+                {item.name}
               </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                This feature is currently under development.
+              <p className="text-gray-600 mt-1">{item.description}</p>
+              <p className="text-sm text-gray-400 mt-1">
+                Category: {item.category}
               </p>
+              <p className="text-green-600 font-bold mt-2">{item.price} DT</p>
             </div>
-          </div>
+          ))}
         </div>
-      </div>
+      )}
     </div>
   );
 };

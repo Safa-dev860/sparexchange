@@ -269,7 +269,7 @@ const AccountPage = () => {
         <div className="flex flex-col md:w-1/3 bg-gray-100 gap-4">
           <ProfileSection user={user} />
           {/* <Notifications /> */}
-          <Statistique />
+          {/* <Statistique /> */}
         </div>
         {/* Middle Listings Section */}
         <ListingsSection

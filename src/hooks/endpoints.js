@@ -81,3 +81,21 @@ export const useDeleteUser = () => {
   };
   return { deleteUser };
 };
+
+export const useRecommendations = () => {
+  const getRecommendations = async (userId) => {
+    try {
+      const response = await axios.get(
+        `${API_BASE}/recommend?user_id=${userId}&top_n=5`,
+        null,
+        {
+          params: { id: userId },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      return { success: false, error: error.response?.data || error.message };
+    }
+  };
+  return { getRecommendations };
+};
