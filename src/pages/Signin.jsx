@@ -9,12 +9,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { FaFacebook } from "react-icons/fa";
+// import useFetchCollection from "../hooks/useCollection";
 
 const SignInPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { status, error } = useSelector((state) => state.auth);
-
+  // const { data, loading, failure } = useFetchCollection("Users");
+  // console.log("users", data, loading, failure);
   const [formData, setFormData] = useState({
     email: "",
     password: "",

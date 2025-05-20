@@ -76,7 +76,6 @@ const DoneDetails = () => {
   return (
     <div className="w-full flex flex-col bg-gray-50 mt-24">
       <div className="w-full sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto p-4 sm:p-6 md:p-8 flex-1">
-        {" "}
         <DoneInfo
           done={done}
           onToggleFavorite={handleToggleFavorite}

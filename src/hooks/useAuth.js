@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { loginStart, loginSuccess, loginFailure, logout } from "./authSlice";
 import { auth } from "./firebase";
+import firebase from "firebase/app";
 
 const useAuth = () => {
   const dispatch = useDispatch();
@@ -23,10 +24,10 @@ const useAuth = () => {
 
     return () => unsubscribe();
   }, [dispatch]);
-
   const login = async () => {
     dispatch(loginStart());
     try {
+      const provider = new firebase.auth.GoogleAuthProvider();
       const result = await auth.signInWithPopup(provider);
       dispatch(loginSuccess(result.user));
     } catch (error) {

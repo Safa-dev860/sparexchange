@@ -33,6 +33,7 @@ import TransportAccountEditCard from "./components/account/TransportAccountEditC
 import Notification from "./pages/Notification";
 import Settings from "./pages/Settings";
 import ConversationsPage from "./components/account/ExchangeAccountConversationPage";
+import NotFound from "./pages/NotFound";
 
 const App = () => {
   const [isAdmin] = useState(false);
@@ -52,7 +53,7 @@ const App = () => {
               <Route path="/login" element={<SignInPage />} />
               <Route path="/signup" element={<SignUpPage />} />
               <Route path="/forgot-password" element={<ForgetPasswordPage />} />
-
+              <Route path="/not-found" element={<NotFound />} />
               <Route element={<ProtectedRoute />}>
                 {/* protected routes  ProductAccountEdit */}
                 <Route path="/products/:id" element={<ProductDetails />} />
@@ -85,7 +86,25 @@ const App = () => {
                 <Route path="/settings" element={<Settings />} />
                 <Route
                   path="/exchanges/:id/conversations"
-                  element={<ConversationsPage />}
+                  element={
+                    <ConversationsPage
+                      documentType="Exchange"
+                      documentPath="products"
+                      titleField="itemOffered"
+                      subtitleField="itemWanted"
+                    />
+                  }
+                />
+                <Route
+                  path="/dones/:id/conversations"
+                  element={
+                    <ConversationsPage
+                      documentType="Done"
+                      documentPath="products"
+                      titleField="itemOffered"
+                      subtitleField="itemWanted"
+                    />
+                  }
                 />
               </Route>
             </Routes>
