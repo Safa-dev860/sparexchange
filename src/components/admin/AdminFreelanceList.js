@@ -8,7 +8,14 @@ const AdminFreelanceList = () => {
     await deleteDocument(id);
   };
 
-  if (loading) return <div className="p-4">Loading freelance gigs...</div>;
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
+        <p className="ml-4 text-gray-600">Loading...</p>
+      </div>
+    );
+  }
   if (error) return <div className="p-4 text-red-600">{error}</div>;
 
   return (

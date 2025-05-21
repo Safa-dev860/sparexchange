@@ -40,7 +40,7 @@ const UserRow = ({
         </button>
         <button
           onClick={toggleBlock}
-          disabled={loadingBlock || loadingUnblock || loading}
+          disabled={loadingBlock || loadingUnblock}
           className={`px-3 py-1 rounded text-white ${
             isBlocked ? "bg-green-500" : "bg-red-500"
           }`}

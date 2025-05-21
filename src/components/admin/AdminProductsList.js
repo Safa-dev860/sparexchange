@@ -13,7 +13,14 @@ const AdminProductsList = () => {
     await deleteDocument(id);
   };
 
-  if (loading) return <div>Loading user...</div>;
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
+        <p className="ml-4 text-gray-600">Loading...</p>
+      </div>
+    );
+  }
   if (error) return <div>{error}</div>;
   return (
     <div className="py-6">
@@ -32,12 +39,11 @@ const AdminProductsList = () => {
 
             {/* Product Details */}
             <div className="p-4 pb-12">
-              {" "}
               {/* Extra padding for button space */}
               <h3 className="text-lg font-semibold">{product.name}</h3>
               <p className="text-gray-600 mb-1">Category: {product.category}</p>
               <p className="text-green-700 font-medium mb-1">
-                ${product.price}
+                {product.price} DT
               </p>
               <p className="text-sm text-gray-500 mb-2">
                 {product.description}

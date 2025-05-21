@@ -15,9 +15,6 @@ const AdminUsersList = () => {
   const { deleteUser, loading: loadingDelete } = useDeleteUser();
   // const { isBlockedUser, loadingIsBlock } = useIsBlocked(user.id, true);
 
-  if (loading) return <div>Loading users...</div>;
-  if (error) return <div>{error}</div>;
-
   const handleDelete = async (userId) => {
     if (!window.confirm("Are you sure you want to delete this user?")) return;
     const res = await deleteUser(userId);
@@ -50,6 +47,16 @@ const AdminUsersList = () => {
       );
     }
   };
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto p-6 flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-700"></div>
+        <p className="ml-4 text-gray-600">Loading...</p>
+      </div>
+    );
+  }
+  if (error) return <div>{error}</div>;
+
   return (
     <div className="mb-8">
       <h2 className="text-2xl font-semibold mb-4">Users</h2>
