@@ -1,5 +1,3 @@
-import React from "react";
-
 const MessageInput = ({ newMessage, setNewMessage, onSubmit }) => {
   return (
     <form onSubmit={onSubmit} className="flex gap-2">

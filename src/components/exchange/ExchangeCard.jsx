@@ -1,7 +1,5 @@
 // components/ExchangeCard.js
-import React from "react";
 import { Link } from "react-router-dom";
-
 const ExchangeCard = ({ item }) => {
   return (
     <Link to={`/exchanges/${item.id}`} className="block">

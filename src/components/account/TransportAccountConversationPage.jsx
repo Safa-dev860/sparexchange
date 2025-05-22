@@ -11,7 +11,7 @@ import { getFirestore, doc, getDoc } from "firebase/firestore";
 import { getDatabase, ref, onValue } from "firebase/database";
 
 const ConversationsPage = ({
-  documentType = "Exchange", // Firestore collection name
+  documentType = "Transport", // Firestore collection name
   documentPath = "products", // Realtime Database path
   titleField = "itemOffered", // Field to display as title
   subtitleField = "itemWanted", // Field to display as subtitle

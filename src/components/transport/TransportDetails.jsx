@@ -81,8 +81,8 @@ const TransportDetails = () => {
       <div className="w-full sm:w-11/12 md:w-4/5 lg:w-3/4 xl:w-2/3 mx-auto p-4 sm:p-6 md:p-8 flex-1">
         <TransportInfoWidget
           transport={transport}
-          onToggleFavorite={handleToggleFavorite}
-          onBookTransport={handleBookTransport}
+          // onToggleFavorite={handleToggleFavorite}
+          // onBookTransport={handleBookTransport}
         />
       </div>
     </div>

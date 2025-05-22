@@ -106,6 +106,28 @@ const App = () => {
                     />
                   }
                 />
+                <Route
+                  path="/transport/:id/conversations"
+                  element={
+                    <ConversationsPage
+                      documentType="Transport"
+                      documentPath="products"
+                      titleField="itemOffered"
+                      subtitleField="itemWanted"
+                    />
+                  }
+                />
+                <Route
+                  path="/freelance/:id/conversations"
+                  element={
+                    <ConversationsPage
+                      documentType="Freelance"
+                      documentPath="products"
+                      titleField="itemOffered"
+                      subtitleField="itemWanted"
+                    />
+                  }
+                />
               </Route>
             </Routes>
             <Footer />

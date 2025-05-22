@@ -1,5 +1,3 @@
-import React from "react";
-
 const ExchangeDetails = ({ exchange, onToggleFavorite, isOwner }) => {
   return (
     <div className="w-full md:w-1/3 flex flex-col space-y-4">

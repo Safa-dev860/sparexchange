@@ -201,7 +201,7 @@ const SignUpPage = () => {
               htmlFor="profilePicture"
               className="block text-sm font-semibold mb-2"
             >
-              Profile Picture (Optional)
+              Profile Picture
             </label>
             <input
               type="file"
